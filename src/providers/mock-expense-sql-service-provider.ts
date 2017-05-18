@@ -147,24 +147,26 @@ doesTableExist(callbackMethod) {
   
 
 
-  syncTable(expenseModels: ExpenseModel[], callbackMethod) {
-    var result = this.syncTableInternal(this.getTable(), expenseModels);
+  syncTable(year:number, month:string, expenseModels: ExpenseModel[], callbackMethod) {
+    var result = this.syncTableInternal(this.getTable(), year, month, expenseModels);
     callbackMethod({success: true, data: result});
   }
-  private syncTableInternal(table, userModels): any {
-      
-      table.data = [];
-      table.data = userModels;
-
+  private syncTableInternal(table, year:number, month:string, userModels): any {
+      for(let i = table.data.length -1; i >= 0; i--){
+        let row = table.data[i];
+        if(row.year === year && row.month === month){
+          table.data.splice(i, 1);
+        }
+      }
       localStorage.setItem(this.tableName, JSON.stringify(table));
       return "OK";
   }
 
-  getAllNonSyncedRecords(callbackMethod){
-    var result = this.getAllNonSyncedRecordsInternal(this.getTable());
+  getAllNonSyncedRecords(year:number, month:string, callbackMethod){
+    var result = this.getAllNonSyncedRecordsInternal(this.getTable(), year, month);
     callbackMethod({success: true, data: result});
   }
-  private getAllNonSyncedRecordsInternal(table): any {
+  private getAllNonSyncedRecordsInternal(table, year:number, month:string): any {
     var resultData: ExpenseModel[] = [];
     
     table.data.forEach(row => {
@@ -176,4 +178,25 @@ doesTableExist(callbackMethod) {
     return resultData;
       
   }
+
+  updateRecordsToSynced(uniqueCodes: string[], callbackMethod){
+    var result = this.updateRecordsToSyncedInternal(this.getTable(), uniqueCodes);
+    callbackMethod({success: true, data: result});
+    
+  }
+
+  updateRecordsToSyncedInternal(table, uniqueCodes:string[]){
+
+    table.data.forEach(row => {
+        if(!row.inSync) {
+            row.inSync = true
+        }
+    });
+
+    localStorage.setItem(this.tableName, JSON.stringify(table));
+      return "OK";
+
+  }
+
 }
+

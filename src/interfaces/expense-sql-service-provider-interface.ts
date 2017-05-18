@@ -10,6 +10,7 @@ export interface ExpenseSqlServiceProviderInterface {
     getAll(callbackMethod);
     updateRecord(expenseModel: ExpenseModel, callbackMethod);
     deleteRecord(id: number, callbackMethod);
-    syncTable(expenseModel: ExpenseModel[], callbackMethod);
-    getAllNonSyncedRecords(callbackMethod);
+    syncTable(year:number, month:string, expenseModel: ExpenseModel[], callbackMethod);
+    getAllNonSyncedRecords(year:number, month:string, callbackMethod);
+    updateRecordsToSynced(uniqueCodes: string[], callbackMethod);
 }

@@ -43,6 +43,7 @@ export class HomePage {
     this.formData.month = localStorage.getItem('budgetMonth')
     this.formData.categoryId = 0;
     this.formData.expenseValue = 0;
+    this.formData.expenseCode = '';
     this.formData.inSync = false;
   }
 
@@ -82,6 +83,7 @@ export class HomePage {
           categoryId: this.formData.categoryId,
           expenseValue: this.formData.expenseValue,
           recordDate: new Date().toString(),
+          expenseCode: this.getNewExpenseCode(),
           inSync: false
         }
         this.expenseDbProvider.insertRecord(expenseModel, e => this.insertExpenseTableCallback(e));
@@ -96,6 +98,7 @@ export class HomePage {
           categoryId: this.formData.categoryId,
           expenseValue: eValue,
           recordDate: new Date().toString(),
+          expenseCode: this.getNewExpenseCode(),
           inSync: false
         }
 
@@ -106,6 +109,16 @@ export class HomePage {
       }
     });
   }
+
+  getNewExpenseCode(): string {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  };
 
   disableSaveButton(){
     if(this.formData.categoryId === undefined || this.formData.categoryId === null || this.formData.categoryId === 0 ||
@@ -152,7 +165,8 @@ export class HomePage {
               categoryId: this.transferToCategoryId,
               expenseValue: this.formData.expenseValue,
               recordDate: new Date().toString(),
-              inSync: false
+              expenseCode: this.getNewExpenseCode(),
+          inSync: false
             }
             this.expenseDbProvider.insertRecord(toExpenseModel, e => this.transferToExpenseTableCallback(e));
             
