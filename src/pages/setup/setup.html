@@ -1,0 +1,36 @@
+<ion-header>
+  <menu-header headerText="Add / Edit Budget Category"></menu-header>
+</ion-header>
+
+
+<ion-content padding>
+  <!--{{frmCmpBudget.category}}-->
+    <!--<button ion-button (click)="save()">Save</button>-->
+ <form  [formGroup]="frmBudget" novalidate>
+
+    <ion-list>
+     <ion-item icon-left>
+        <ion-label floating>
+          <b>Category</b>
+        </ion-label>
+        <ion-input type="text" formControlName="frmCmpCategory" maxlength="50"  [ngModel]='formData.categoryName'></ion-input>
+      </ion-item>
+      <ion-item icon-left>
+        <ion-label floating>
+          <b>Budget</b>
+        </ion-label>
+        <ion-input type="text" formControlName="frmCmpBudget" maxlength="50"  [ngModel]='formData.budget'></ion-input>
+      </ion-item>
+    </ion-list>
+
+ </form>
+
+</ion-content>
+
+<ion-footer>
+  <button ion-buttons ion-item [disabled]='!frmBudget.valid' (click)="saveClick(frmBudget.value)">
+    <div class="item-note" item-right>
+        Save
+      </div>
+  </button>
+</ion-footer>

@@ -1,0 +1,60 @@
+<ion-header>
+  <menu-header headerText="Report"></menu-header>
+</ion-header>
+ 
+<ion-content padding>
+
+  <ion-card>
+      <ion-card-header>
+        Budget Year/Month
+      </ion-card-header>
+      <ion-card-content >
+
+        <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
+          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select year" [(ngModel)]='selectedYear' required>
+              <ion-option *ngFor="let year of years" [value]="year">{{year}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
+          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select month" [(ngModel)]='selectedMonth' required>
+              <ion-option *ngFor="let month of monthNames" [value]="month">{{month}}</ion-option>
+          </ion-select>
+        </ion-item>
+       
+        <ion-item>
+        
+          <button ion-button round (click)="generateClick()">
+            Generate Report
+          </button>
+        </ion-item>
+       
+      </ion-card-content>
+  </ion-card>
+
+   <ion-card>
+      <ion-card-header>
+        Report
+      </ion-card-header>
+      <ion-card-content >
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <b>Category</b>
+            </ion-col>
+            <ion-col>
+              <b>Expence Value</b>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let record of records">
+            <ion-col>
+              {{record.category}}
+            </ion-col>
+            <ion-col>
+              {{record.expenseValue}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+   </ion-card>
+  
+</ion-content>

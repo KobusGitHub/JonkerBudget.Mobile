@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Sqlite Tool</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+   <ion-list class="servicesList">
+    <h2>Enter SQL</h2>
+    <ion-textarea [(ngModel)]="sqlStatement" style="margin: 12px;" type="text" maxlength="2000"  placeholder="SQL Here..."></ion-textarea>
+    <button ion-button secondary (click)="execute()" >Execute</button>
+    <h2>Result</h2>
+    <ion-grid>
+      <ion-row *ngFor="let row of sqlResultRows">
+        <ion-col>
+          <ion-card-content>
+            {{row | json}}
+          </ion-card-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+   </ion-list>
+</ion-content>

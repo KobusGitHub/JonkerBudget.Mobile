@@ -1,0 +1,133 @@
+
+// http://ionicframework.com/docs/v2/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+//Alerts
+.alert-title {
+font-weight: 400 !important;
+font-size: 18px !important;
+color: #444 !important;
+}
+
+.alert-sub-title {
+font-weight: 400 !important;
+font-size: 16px !important;
+margin: 20px 0px 10px 0px !important;
+color: #666 !important;
+}
+
+//Menu
+.menuLogo {
+width: 30%;
+margin: 8px 5px 0px 10px;
+}
+
+menu-header,
+no-menu-header {
+
+               button {
+               color: #fff !important;
+               text-shadow: 0px 1px 1px #000;
+               font-weight: 400 !important;
+               }
+
+}
+
+.menu-inner {
+
+               ion-label {
+               font-weight: 400;
+               color: #444;
+               }
+
+               ion-icon {
+               min-width: 25px;
+               float: left;
+               margin-top: 1px;
+               color: #000 !important;
+               }
+
+}//menu-inner ends
+
+//Footer 
+ion-footer {
+
+               ion-buttons {
+
+                              ion-col {
+                              text-align: center;
+
+                                             button {
+                                             color: #fff !important;
+                                             text-shadow: 0px 1px 1px #000 !important;
+                                             font-weight: 400 !important;
+                                             background: transparent !important;
+                                             padding: 0px !important;
+                                             }
+
+                                             .button-ios {
+                                             margin: 0px !important;
+                                             }
+
+                              }//ion-col ends
+
+                              button {
+                              color: #fff !important;
+                              text-shadow: 0px 1px 1px #000 !important;
+                              }
+
+               }//ion-buttons ends
+
+}//ion-footer ends
+
+//Headers
+.toolbar-background {
+background: #B81F24;
+}
+
+.toolbar-title {
+color: #fff !important;
+text-shadow: 0px 1px 1px #000;
+font-weight: 400 !important;
+}
+
+.header {
+
+               ion-toolbar {
+
+                              .bar-buttons {
+
+                                             button {
+                                             color: #fff !important;
+                                             display: block !important;
+                                             text-shadow: 0px 1px 1px #000;
+                                             }
+                              
+                              }//bar-buttons end
+
+               }//ion-toolbar ends
+
+}//header ends
+
+//Lists
+.item-inner {
+border-bottom: none !important;
+}
+
+.item-block {
+border-bottom: 1px solid #dedede;
+}

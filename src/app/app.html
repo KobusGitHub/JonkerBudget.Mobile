@@ -1,0 +1,47 @@
+<ion-menu [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <button menuClose ion-item icon-left  (click)="navigatePage(homePage)">
+        <ion-icon ios="ios-home-outline" md="ios-home-outline"></ion-icon>
+          Expense
+      </button>
+      
+      <button menuClose ion-item icon-left  (click)="navigatePage(setMonthPage)">
+          <ion-icon ios="ios-time-outline" md="ios-time-outline"></ion-icon>
+              Set Month
+      </button>
+
+
+
+      <button menuClose ion-item icon-left  (click)="navigatePage(budgetListPage)">
+          <ion-icon ios="ios-hammer-outline" md="ios-hammer-outline"></ion-icon>
+              Setup Budget
+      </button>
+
+      <button menuClose ion-item icon-left  (click)="navigatePage(reportPage)">
+          <ion-icon ios="ios-list-box-outline" md="ios-list-box-outline"></ion-icon>
+              Report
+      </button>
+
+
+      <ion-item-divider light style="background-color: #A6A6A6; color: white">Dev</ion-item-divider>
+      <button menuClose ion-item icon-left  (click)="navigatePage(sqlitePage)">
+          <ion-icon ios="ios-construct-outline" md="ios-construct-outline"></ion-icon>
+              SQlite
+      </button>
+      
+      
+
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

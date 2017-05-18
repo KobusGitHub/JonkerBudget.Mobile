@@ -1,0 +1,24 @@
+<ion-header>
+  <menu-header headerText="Setup Budget Category"></menu-header>
+</ion-header>
+
+
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item *ngFor="let item of items" (click)="editClick($event, item)">
+      {{item.categoryName}}
+      <div class="item-note" item-right>
+        R {{item.budget}}
+      </div>
+    </button>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <button ion-buttons ion-item (click)="newItemClick()">
+    <div class="item-note" item-right>
+        New
+      </div>
+  </button>
+</ion-footer>

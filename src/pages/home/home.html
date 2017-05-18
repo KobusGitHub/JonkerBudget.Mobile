@@ -1,0 +1,78 @@
+<ion-header>
+  <menu-header headerText="Home"></menu-header>
+</ion-header>
+ 
+<ion-content padding>
+  <ion-item icon-left>
+    <ion-badge>{{formData.year}}</ion-badge>
+    <ion-badge>{{formData.month}}</ion-badge>
+   </ion-item>
+ 
+  <ion-item icon-left>
+    <ion-label>Transfer Expense</ion-label>
+    <ion-checkbox color="secondary" [(ngModel)]="isTransferExpense"></ion-checkbox>
+  </ion-item>
+  
+
+
+  <ion-card>
+      <ion-card-header>
+        {{getCategoryPlaceholder()}}
+      </ion-card-header>
+      <ion-card-content >
+        <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
+          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select" [(ngModel)]='formData.categoryId' required>
+              <ion-option *ngFor="let category of categories" [value]="category.id">{{category.categoryName}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item icon-left style="border-bottom: 0px; text-align: left; padding-left: 0px;">
+          <track-budget [categoryId]='formData.categoryId'></track-budget>
+        </ion-item>
+
+      </ion-card-content>
+   </ion-card>
+
+ 
+  
+
+  <ion-card *ngIf="isTransferExpense">
+      <ion-card-header>
+        Transfer to
+      </ion-card-header>
+      <ion-card-content >
+        <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
+          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select" [(ngModel)]='transferToCategoryId' required>
+              <ion-option *ngFor="let category of categories" [value]="category.id">{{category.categoryName}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item icon-left style="border-bottom: 0px; text-align: left; padding-left: 0px;">
+          <track-budget [categoryId]='transferToCategoryId'></track-budget>
+        </ion-item>
+
+      </ion-card-content>
+   </ion-card>
+
+
+
+
+  <ion-item icon-left>
+    <ion-label floating>
+      <b>Expense</b>
+    </ion-label>
+    <ion-input type="number" maxlength="50"  [(ngModel)]='formData.expenseValue'></ion-input>
+  </ion-item>
+
+
+ 
+</ion-content>
+
+
+<ion-footer>
+  <button ion-buttons ion-item [disabled]='disableSaveButton()' (click)="saveClick()">
+    <div class="item-note" item-right>
+        Save
+      </div>
+  </button>
+</ion-footer>
