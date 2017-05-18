@@ -3,11 +3,11 @@ import { Nav, Platform, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage } from '../shared/shared-pages';
+import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage } from '../shared/shared-pages';
 import { DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
     CategorySqlServiceProvider, MockCategorySqlServiceProvider, 
     ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-    SqliteSqlServiceProvider, ToastProvider } from '../shared/shared-providers'
+    SqliteSqlServiceProvider, ToastProvider, ExpenseApi } from '../shared/shared-providers'
 
 import { SqliteCallbackModel } from '../shared/shared-models';
 
@@ -16,7 +16,7 @@ import { SqliteCallbackModel } from '../shared/shared-models';
   providers: [DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider, 
             CategorySqlServiceProvider, MockCategorySqlServiceProvider,
             ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-            SqliteSqlServiceProvider, ToastProvider]
+            SqliteSqlServiceProvider, ToastProvider, ExpenseApi]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -28,6 +28,7 @@ export class MyApp {
   private budgetListPage;
   private setMonthPage;
   private reportPage; 
+  private syncPage;
 
   loader: any;
   usersInit: boolean = false;
@@ -62,6 +63,7 @@ export class MyApp {
     this.budgetListPage = BudgetListPage;
     this.setMonthPage = SetMonthPage;
     this.reportPage = ReportPage;
+    this.syncPage = SyncPage;
   }
 
   initializeApp() {

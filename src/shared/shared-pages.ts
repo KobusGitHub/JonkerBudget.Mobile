@@ -6,3 +6,4 @@ export * from '../pages/budget-list/budget-list';
 export * from '../pages/temp/temp';
 export * from '../pages/set-month/set-month';
 export * from '../pages/report/report';
+export * from '../pages/sync/sync';

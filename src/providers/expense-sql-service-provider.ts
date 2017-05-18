@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { SQLite } from 'ionic-native';
-import { ExpenseModel } from "../shared/shared-models";
+import { ExpenseModel, ExpenseApiModel } from "../shared/shared-models";
 import { ExpenseSqlServiceProviderInterface } from "../shared/shared-interfaces";
 
 
@@ -250,7 +250,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   getAllNonSyncedRecords(year:number, month:string, callbackMethod){
-    let result: ExpenseModel[] = [];
+    let result: ExpenseApiModel[] = [];
 
     this.db.openDatabase({
       name: 'data.db',
@@ -267,7 +267,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   month: data.rows.item(i).month,
                   categoryId: data.rows.item(i).categoryId,
                   expenseValue: data.rows.item(i).expenseValue,
-                  recordDate: data.rows.item(i).recordDate,
+                  recordDate: new Date(data.rows.item(i).recordDate),
                   expenseCode: data.rows.item(i).expenseCode,
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 });
