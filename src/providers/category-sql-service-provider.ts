@@ -218,6 +218,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
 
         this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, inSync) VALUES (?, ?, ?, ?)'
         , [
+            categoryModel.guidId, 
             categoryModel.categoryName, 
             categoryModel.budget,
             1

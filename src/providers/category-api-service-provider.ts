@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch';
 import {baseUrl} from '../shared/shared';
 
 @Injectable()
-export class ExpenseApi {     
+export class CategoryApi {     
     private header:Headers;
 
     constructor(private http:Http) {
@@ -18,22 +18,21 @@ export class ExpenseApi {
           return this.header;
      }
 
-    addExpense(data) : Observable<any> {
-          return this.http.post(baseUrl + "/Expenses/AddExpense",data, {headers: this.getHeaders()})
+    addCategory(data) : Observable<any> {
+          return this.http.post(baseUrl + "/Categories/AddCategory",data, {headers: this.getHeaders()})
           .map((response: Response) => response.json())
           .catch((error:any) => Observable.throw(error.error || 'Server error'));
      }
 
-     addExpenses(data) : Observable<any[]> {
-          return this.http.post(baseUrl + "/Expenses/AddExpenses",data, {headers: this.getHeaders()})
+     addCategories(data) : Observable<any[]> {
+          return this.http.post(baseUrl + "/Categories/AddCategories",data, {headers: this.getHeaders()})
           .map((response: Response) => response)
           .catch((error:any) => Observable.throw(error.error || 'Server error'));
      }
 
-    
-
-     getExpenses() : Observable<any[]> {
-          return this.http.get(baseUrl + "/Expenses/GetAllExpenses", {headers: this.getHeaders()})
+     
+     getCategories() : Observable<any[]> {
+          return this.http.get(baseUrl + "/Categories/GetAllCategories", {headers: this.getHeaders()})
           .map((response: Response) => response.json())
           .catch((error:any) => Observable.throw(error.error || 'Server error'));
      }

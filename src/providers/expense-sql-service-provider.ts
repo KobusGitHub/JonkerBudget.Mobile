@@ -230,7 +230,9 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
 
         this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
         , [
-            budgetSetupModel.categoryGuidId, 
+            budgetSetupModel.year, 
+            budgetSetupModel.month,
+            budgetSetupModel.categoryGuidId,
             budgetSetupModel.expenseValue,
             budgetSetupModel.recordDate,
             budgetSetupModel.expenseCode,

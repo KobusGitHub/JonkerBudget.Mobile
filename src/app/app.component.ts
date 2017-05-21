@@ -7,7 +7,7 @@ import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPag
 import { DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
     CategorySqlServiceProvider, MockCategorySqlServiceProvider, 
     ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-    SqliteSqlServiceProvider, ToastProvider, ExpenseApi } from '../shared/shared-providers'
+    SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi } from '../shared/shared-providers'
 
 import { SqliteCallbackModel } from '../shared/shared-models';
 
@@ -16,7 +16,7 @@ import { SqliteCallbackModel } from '../shared/shared-models';
   providers: [DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider, 
             CategorySqlServiceProvider, MockCategorySqlServiceProvider,
             ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-            SqliteSqlServiceProvider, ToastProvider, ExpenseApi]
+            SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;

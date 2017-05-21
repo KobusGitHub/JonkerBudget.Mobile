@@ -7,5 +7,6 @@ export * from '../providers/mock-category-sql-service-provider';
 export * from '../providers/expense-sql-service-provider';
 export * from '../providers/mock-expense-sql-service-provider';
 export * from '../providers/expense-api-service-provider';
+export * from '../providers/category-api-service-provider';
 
 export * from '../providers/database-service-provider'
