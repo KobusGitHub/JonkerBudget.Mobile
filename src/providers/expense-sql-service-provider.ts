@@ -38,7 +38,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, year NUMERIC, month TEXT, categoryId NUMERIC, expenseValue NUMERIC, recordDate TEXT, expenseCode TEXT, inSync NUMERIC)', {}).then((data) => {
+      this.db.executeSql('CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, year NUMERIC, month TEXT, categoryGuidId TEXT, expenseValue NUMERIC, recordDate TEXT, expenseCode TEXT, inSync NUMERIC)', {}).then((data) => {
         callbackMethod({success: true, data: data.rows.item(0)});
       }, (err) => {
         callbackMethod({success: false, data: err});
@@ -55,11 +55,11 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('INSERT INTO Expense (year, month, categoryId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
       , [
           expenseModel.year,
           expenseModel.month,
-          expenseModel.categoryId, 
+          expenseModel.categoryGuidId, 
           expenseModel.expenseValue, 
           expenseModel.recordDate,
           expenseModel.expenseCode, 
@@ -82,7 +82,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
     }).then(() => {
         // WORK
 
-        let sql = "UPDATE Expense SET year = " + expenseModel.year + ", month = '" + expenseModel.month + "', categoryId = '" + expenseModel.categoryId + "', expenseValue = " + expenseModel.expenseValue + ", recordDate = '" + expenseModel.recordDate + "', expenseCode = '" + expenseModel.expenseCode + "', inSync = " + this.boolToNum(expenseModel.inSync) + " WHERE id = " + expenseModel.id;
+        let sql = "UPDATE Expense SET year = " + expenseModel.year + ", month = '" + expenseModel.month + "', categoryGuidId = '" + expenseModel.categoryGuidId + "', expenseValue = " + expenseModel.expenseValue + ", recordDate = '" + expenseModel.recordDate + "', expenseCode = '" + expenseModel.expenseCode + "', inSync = " + this.boolToNum(expenseModel.inSync) + " WHERE id = " + expenseModel.id;
         this.db.executeSql(sql, {}).then((data) => {
           callbackMethod({success: true, data: data});
         }, (err) => {
@@ -109,7 +109,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   id: data.rows.item(i).id,
                   year: data.rows.item(i).year,
                   month: data.rows.item(i).month,
-                  categoryId: data.rows.item(i).categoryId,
+                  categoryGuidId: data.rows.item(i).categoryGuidId,
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: data.rows.item(i).recordDate,
                   expenseCode: data.rows.item(i).expenseCode,
@@ -144,7 +144,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   id: data.rows.item(i).id,
                   year: data.rows.item(i).year,
                   month: data.rows.item(i).month,
-                  categoryId: data.rows.item(i).categoryId,
+                  categoryGuidId: data.rows.item(i).categoryGuidId,
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: data.rows.item(i).recordDate,
                   expenseCode: data.rows.item(i).expenseCode,
@@ -178,7 +178,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   id: data.rows.item(i).id,
                   year: data.rows.item(i).year,
                   month: data.rows.item(i).month,
-                  categoryId: data.rows.item(i).categoryId,
+                  categoryGuidId: data.rows.item(i).categoryGuidId,
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: data.rows.item(i).recordDate,
                   expenseCode: data.rows.item(i).expenseCode,
@@ -228,9 +228,9 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       for(var index = 0; index < expenseModels.length; index++){
         let budgetSetupModel = expenseModels[index];  
 
-        this.db.executeSql('INSERT INTO Expense (year, month, categoryId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
+        this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
         , [
-            budgetSetupModel.categoryId, 
+            budgetSetupModel.categoryGuidId, 
             budgetSetupModel.expenseValue,
             budgetSetupModel.recordDate,
             budgetSetupModel.expenseCode,
@@ -265,7 +265,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   id: data.rows.item(i).id,
                   year: data.rows.item(i).year,
                   month: data.rows.item(i).month,
-                  categoryId: data.rows.item(i).categoryId,
+                  categoryGuidId: data.rows.item(i).categoryGuidId,
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: new Date(data.rows.item(i).recordDate),
                   expenseCode: data.rows.item(i).expenseCode,

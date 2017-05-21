@@ -14,7 +14,7 @@ export class HomePage {
   loader: any;
   categories: CategoryModel[] = [];
   isTransferExpense: boolean = false;
-  transferToCategoryId = 0;
+  transferToGuidId = '';
         
 
   constructor(public navCtrl: NavController,
@@ -41,7 +41,7 @@ export class HomePage {
     this.formData.id = 0;
     this.formData.year = parseInt(localStorage.getItem('budgetYear')),
     this.formData.month = localStorage.getItem('budgetMonth')
-    this.formData.categoryId = 0;
+    this.formData.categoryGuidId = '';
     this.formData.expenseValue = 0;
     this.formData.expenseCode = '';
     this.formData.inSync = false;
@@ -80,7 +80,7 @@ export class HomePage {
           id: 0,
           year: parseInt(localStorage.getItem('budgetYear')),
           month: localStorage.getItem('budgetMonth'),
-          categoryId: this.formData.categoryId,
+          categoryGuidId: this.formData.categoryGuidId,
           expenseValue: this.formData.expenseValue,
           recordDate: new Date().toString(),
           expenseCode: this.getNewExpenseCode(),
@@ -95,7 +95,7 @@ export class HomePage {
           id: 0,
           year: parseInt(localStorage.getItem('budgetYear')),
           month: localStorage.getItem('budgetMonth'),
-          categoryId: this.formData.categoryId,
+          categoryGuidId: this.formData.categoryGuidId,
           expenseValue: eValue,
           recordDate: new Date().toString(),
           expenseCode: this.getNewExpenseCode(),
@@ -121,16 +121,16 @@ export class HomePage {
   };
 
   disableSaveButton(){
-    if(this.formData.categoryId === undefined || this.formData.categoryId === null || this.formData.categoryId === 0 ||
+    if(this.formData.categoryGuidId === undefined || this.formData.categoryGuidId === null || this.formData.categoryGuidId === 0 ||
     this.formData.expenseValue === undefined || this.formData.expenseValue === null ||this.formData.expenseValue < 1){
       return true; 
     }
 
-    if(this.isTransferExpense && this.transferToCategoryId === 0){
+    if(this.isTransferExpense && this.transferToGuidId === ''){
       return true;
     }
 
-    if(this.isTransferExpense && this.transferToCategoryId === this.formData.categoryId){
+    if(this.isTransferExpense && this.transferToGuidId === this.formData.guidId){
       return true;
     }
     
@@ -162,7 +162,7 @@ export class HomePage {
               id: 0,
               year: parseInt(localStorage.getItem('budgetYear')),
               month: localStorage.getItem('budgetMonth'),
-              categoryId: this.transferToCategoryId,
+              categoryGuidId: this.transferToGuidId,
               expenseValue: this.formData.expenseValue,
               recordDate: new Date().toString(),
               expenseCode: this.getNewExpenseCode(),

@@ -38,7 +38,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('CREATE TABLE IF NOT EXISTS Category(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryName TEXT, budget NUMERIC, inSync NUMERIC)', {}).then((data) => {
+      this.db.executeSql('CREATE TABLE IF NOT EXISTS Category(id INTEGER PRIMARY KEY AUTOINCREMENT, guidId TEXT, categoryName TEXT, budget NUMERIC, inSync NUMERIC)', {}).then((data) => {
         callbackMethod({success: true, data: data.rows.item(0)});
       }, (err) => {
         callbackMethod({success: false, data: err});
@@ -55,8 +55,9 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('INSERT INTO Category (categoryName, budget, inSync) VALUES (?, ?, ?)'
+      this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, inSync) VALUES (?, ?, ?, ?)'
       , [
+          categoryModel.guidId,
           categoryModel.categoryName, 
           categoryModel.budget, 
           this.boolToNum(categoryModel.inSync)
@@ -78,7 +79,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
     }).then(() => {
         // WORK
 
-        let sql = "UPDATE Category SET categoryName = '" + categoryModel.categoryName + "', budget = " + categoryModel.budget + ",  inSync = " + this.boolToNum(categoryModel.inSync) + " WHERE id = " + categoryModel.id;
+        let sql = "UPDATE Category SET guidId = '" + categoryModel.guidId + "', categoryName = '" + categoryModel.categoryName + "', budget = " + categoryModel.budget + ",  inSync = " + this.boolToNum(categoryModel.inSync) + " WHERE id = " + categoryModel.id;
         this.db.executeSql(sql, {}).then((data) => {
           callbackMethod({success: true, data: data});
         }, (err) => {
@@ -103,6 +104,38 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
             for(var i = 0; i < data.rows.length; i++) {
                 result = {
                   id: data.rows.item(i).id,
+                  guidId: data.rows.item(i).guidId,
+                  categoryName: data.rows.item(i).categoryName,
+                  budget: data.rows.item(i).budget,
+                  inSync: this.numToBool(data.rows.item(i).inSync),
+                };
+            }
+        }
+        callbackMethod({success: true, data: result});
+      }, (err) => {
+        callbackMethod({success: false, data: err});
+      });
+
+    }, (err) => {
+      callbackMethod({success: false, data: err});
+    });
+  }
+
+   getRecordByGuidId(guidId, callbackMethod) {
+    let result: any = {};
+
+    this.db.openDatabase({
+      name: 'data.db',
+      location: 'default' // the location field is required
+    }).then(() => {
+
+      this.db.executeSql("SELECT * FROM Category WHERE guidId = '" + guidId + "'" ,[]).then((data) => {
+        result = [];
+        if(data.rows.length > 0) {
+            for(var i = 0; i < data.rows.length; i++) {
+                result = {
+                  id: data.rows.item(i).id,
+                  guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
                   inSync: this.numToBool(data.rows.item(i).inSync),
@@ -134,6 +167,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
             for(var i = 0; i < data.rows.length; i++) {
                 result.push({
                   id: data.rows.item(i).id,
+                  guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
                   inSync: this.numToBool(data.rows.item(i).inSync),
@@ -182,7 +216,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       for(var index = 0; index < budgetSetupModels.length; index++){
         let categoryModel = budgetSetupModels[index];  
 
-        this.db.executeSql('INSERT INTO Category (categoryName, budget, inSync) VALUES (?, ?, ?)'
+        this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, inSync) VALUES (?, ?, ?, ?)'
         , [
             categoryModel.categoryName, 
             categoryModel.budget,
@@ -215,6 +249,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
             for(var i = 0; i < data.rows.length; i++) {
                 result.push({
                   id: data.rows.item(i).id,
+                  guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
                   inSync: this.numToBool(data.rows.item(i).inSync),

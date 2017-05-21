@@ -26,9 +26,20 @@ export class SyncPage {
   }
 
   syncClick(){
+    this.databaseSqlServiceProvider.categoryDbProvider.getAllNonSyncedRecords(e => this.getNonSyncedCategoryCallback(e))
 
-    this.databaseSqlServiceProvider.expenseDbProvider.getAllNonSyncedRecords(2017, 'May', e => this.getAllNonSyncedRecordsCallback(e));
+    //this.databaseSqlServiceProvider.expenseDbProvider.getAllNonSyncedRecords(2017, 'May', e => this.getAllNonSyncedRecordsCallback(e));
 
+  }
+
+  getNonSyncedCategoryCallback(sqliteCallbackModel: SqliteCallbackModel){
+    //alert(JSON.stringify(sqliteCallbackModel.data))
+    if(!sqliteCallbackModel.success){
+      this.toast.showToast("Error getting data to sync");
+      return;
+    }
+
+    
   }
 
   getAllNonSyncedRecordsCallback(sqliteCallbackModel: SqliteCallbackModel){

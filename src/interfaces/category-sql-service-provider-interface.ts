@@ -6,6 +6,7 @@ export interface CategorySqlServiceProviderInterface {
     initialiseTable(callbackMethod);
     insertRecord(categoryModel: CategoryModel, callbackMethod);
     getRecord(id, callbackMethod);
+    getRecordByGuidId(guidId, callbackMethod);
     getAll(callbackMethod);
     updateRecord(categoryModel: CategoryModel, callbackMethod);
     deleteRecord(id: number, callbackMethod);

@@ -1,6 +1,6 @@
 export class ExpenseApiModel {
   id: number;
-  categoryId: number;
+  categoryGuidId: string;
   expenseValue: number;
   year: number;
   month: string;

@@ -68,6 +68,22 @@ export class MockCategorySqlServiceProvider implements CategorySqlServiceProvide
     return resultData;
   }
 
+   getRecordByGuidId(guidId, callbackMethod) {
+    var result = this.getRecordByGuidIdInternal(this.getTable(), guidId)
+    callbackMethod({success: true, data: result});
+  }
+  private getRecordByGuidIdInternal(table, guidId): any {
+    var resultData: any;
+    
+    table.data.forEach(row => {
+        if(row.guidId === guidId) {
+            resultData = row;
+        }
+    });
+        
+    return resultData;
+  }
+
   getAll(callbackMethod) {
     var result = this.getAllInternal(this.getTable())
     callbackMethod({success: true, data: result});

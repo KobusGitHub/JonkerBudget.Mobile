@@ -21,13 +21,13 @@
       </ion-card-header>
       <ion-card-content >
         <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
-          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select" [(ngModel)]='formData.categoryId' required>
-              <ion-option *ngFor="let category of categories" [value]="category.id">{{category.categoryName}}</ion-option>
+          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select" [(ngModel)]='formData.categoryGuidId' required>
+              <ion-option *ngFor="let category of categories" [value]="category.guidId">{{category.categoryName}}</ion-option>
           </ion-select>
         </ion-item>
 
         <ion-item icon-left style="border-bottom: 0px; text-align: left; padding-left: 0px;">
-          <track-budget [categoryId]='formData.categoryId'></track-budget>
+          <track-budget [categoryGuidId]='formData.categoryGuidId'></track-budget>
         </ion-item>
 
       </ion-card-content>
@@ -42,13 +42,13 @@
       </ion-card-header>
       <ion-card-content >
         <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
-          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select" [(ngModel)]='transferToCategoryId' required>
-              <ion-option *ngFor="let category of categories" [value]="category.id">{{category.categoryName}}</ion-option>
+          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select" [(ngModel)]='transferToGuidId' required>
+              <ion-option *ngFor="let category of categories" [value]="category.guidId">{{category.categoryName}}</ion-option>
           </ion-select>
         </ion-item>
 
         <ion-item icon-left style="border-bottom: 0px; text-align: left; padding-left: 0px;">
-          <track-budget [categoryId]='transferToCategoryId'></track-budget>
+          <track-budget [categoryGuidId]='transferToGuidId'></track-budget>
         </ion-item>
 
       </ion-card-content>

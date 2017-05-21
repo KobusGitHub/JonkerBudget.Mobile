@@ -58,7 +58,7 @@ export class ReportPage {
       
       sqliteCallbackModel.data.forEach(rec => {
         this.categories.forEach(cat => {
-          if(cat.id === rec.categoryId){
+          if(cat.guidId === rec.categoryGuidId){
             catName = cat.categoryName;
           }
         });

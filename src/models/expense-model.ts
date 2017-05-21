@@ -1,6 +1,6 @@
 export class ExpenseModel {
   id: number;
-  categoryId: number;
+  categoryGuidId: string;
   expenseValue: number;
   year: number;
   month: string;

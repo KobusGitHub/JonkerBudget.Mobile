@@ -9,7 +9,7 @@ import { ToastController,Events } from 'ionic-angular';
 })
 export class TrackBudgetComponent {
 
-  @Input() categoryId: number;
+  @Input() categoryGuidId: string;
   displayText : string;
   expenseTotal: number = 0;
   budgetValue: number = 0;
@@ -22,7 +22,7 @@ export class TrackBudgetComponent {
   budgetMonth = 'January'
 
   constructor(public databaseDbProvider: DatabaseSqlServiceProvider) {
-    this.categoryId = 0;
+    this.categoryGuidId = '';
     this.displayText = '';
 
     this.budgetYear = parseInt(localStorage.getItem('budgetYear')),
@@ -30,7 +30,7 @@ export class TrackBudgetComponent {
   }
 
   ngOnChanges(){
-    if(!this.categoryId){
+    if(this.categoryGuidId === ''){
       return;
     }
     this.loadData();
@@ -38,7 +38,7 @@ export class TrackBudgetComponent {
 
 
   loadData(){
-    if(!this.categoryId || this.categoryId == 0){
+    if(!this.categoryGuidId || this.categoryGuidId == ''){
       this.displayText = '';
       return;
     }
@@ -50,7 +50,7 @@ export class TrackBudgetComponent {
     this.textColor = 'black';
 
     
-    this.databaseDbProvider.categoryDbProvider.getRecord(this.categoryId, e => this.getCategoryCallback(e))
+    this.databaseDbProvider.categoryDbProvider.getRecordByGuidId(this.categoryGuidId, e => this.getCategoryCallback(e))
     this.databaseDbProvider.expenseDbProvider.getAllInPeriod(this.budgetYear, this.budgetMonth, e => this.getAllExpensesCallback(e))
   
   }
@@ -71,7 +71,7 @@ export class TrackBudgetComponent {
      
      if(result.success) {
        result.data.forEach(expense => {
-         if(expense.categoryId == this.categoryId){
+         if(expense.categoryGuidId == this.categoryGuidId){
            console.log(Number(this.expenseTotal) + ' + ' +  Number(expense.expenseValue));
            this.expenseTotal = Number(this.expenseTotal) + Number(expense.expenseValue)
            console.log('expenseTotal: ' + this.expenseTotal);

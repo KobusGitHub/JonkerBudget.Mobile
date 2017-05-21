@@ -70,6 +70,7 @@ export class SetupPage {
 
   buildEmptyModel(){
     this.formData.id = 0;
+    this.formData.guidId = '';
     this.formData.categoryName = '';
     this.formData.budget = '';
     this.formData.inSync = false;
@@ -79,6 +80,7 @@ export class SetupPage {
   saveClick(frmCmps){
     let categoryModel: CategoryModel = {
       id: this.budgetSetupId,
+      guidId: this.formData.guidId,
       categoryName: frmCmps.frmCmpCategory,
       budget: frmCmps.frmCmpBudget,
       inSync: false
@@ -88,6 +90,7 @@ export class SetupPage {
     }); 
     this.loader.present().then(() => {
       if(this.budgetSetupId === 0){
+        categoryModel.guidId = this.getNewGuid();
         this.databaseSqlServiceProvider.categoryDbProvider.insertRecord(categoryModel, e => this.insertBudgetSetupTableCallback(e));
       } else {
         this.databaseSqlServiceProvider.categoryDbProvider.updateRecord(categoryModel, e => this.updateBudgetSetupTableCallback(e));
@@ -125,5 +128,15 @@ export class SetupPage {
         alert(JSON.stringify(result.data));
         this.loader.dismiss();
     }
+
+    getNewGuid(): string {
+      var d = new Date().getTime();
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (d + Math.random()*16)%16 | 0;
+          d = Math.floor(d/16);
+          return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+      });
+      return uuid;
+    };
   
 }
