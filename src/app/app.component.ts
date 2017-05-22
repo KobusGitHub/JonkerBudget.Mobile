@@ -36,10 +36,6 @@ export class MyApp {
   recordsCreated: boolean = false;
   expenseInit: boolean = false;
 
-  //categoryRecCount = 39;
-  categoryRecCount = 0;
-
-
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
@@ -130,57 +126,9 @@ export class MyApp {
             userType: 'Admin',
             inSync: false
         }, e => this.insertUserCallback(e));
-
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Allan Gray', budget: 500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Audi', budget: 6232.84, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Boeta Klere', budget: 500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'City of Joburg', budget: 5000, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Dokter', budget: 2000, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'DSTV', budget: 844, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Gladys', budget: 4450, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'google music', budget: 60, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Home Owner Accociation', budget: 350, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Huis', budget: 13277, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Janien', budget: 1500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Janien Klere', budget: 500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Ruan', budget: 400, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'kamp', budget: 2500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Trinity', budget: 0, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'kids Courier', budget: 800, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Kaponda', budget: 1700, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Kobus', budget: 1500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Kobus Klere', budget: 500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Kruideniers', budget: 6000, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Lunch', budget: 800, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Maintenance', budget: 1500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Momentum', budget: 2321, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'MTN', budget: 143.99, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Naweek', budget: 2000, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Petrol', budget: 4000, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Polo', budget: 2382.13, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Random', budget: 3094, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Sanral', budget: 500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Santam', budget: 3094, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'SOS', budget: 360, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Spaar', budget: 2000, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Sport', budget: 250, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Swembad', budget: 300, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Telkom', budget: 860, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'uber', budget: 300, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Uiteet/Takeaways', budget: 1500, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Vodacom', budget: 438, inSync: false }, e => this.insertCategoryCallback(e));
-        // this.databaseSqlServiceProvider.categoryDbProvider.insertRecord({ id: 0, categoryName: 'Pets', budget: 200, inSync: false }, e => this.insertCategoryCallback(e));
     }
 
-    insertCategoryCallback(result: SqliteCallbackModel){
-        if(result.success) {
-            this.categoryRecCount = this.categoryRecCount - 1;
-            if(this.categoryRecCount === 0)
-            {
-                this.toast.showToast('Inserted category records successfully');
-            }
-        }
-    }
+    
    
     initialiseUserTableCallback(result: SqliteCallbackModel){
         this.usersInit = true;

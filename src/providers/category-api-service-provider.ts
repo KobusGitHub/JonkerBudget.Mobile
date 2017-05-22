@@ -24,6 +24,12 @@ export class CategoryApi {
           .catch((error:any) => Observable.throw(error.error || 'Server error'));
      }
 
+    updateCategory(data) : Observable<any> {
+         return this.http.put(baseUrl + "/Categories/UpdateCategory" , data,{headers: this.getHeaders()})
+          .map((response: Response) => response.json())
+          .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+     }
+
      addCategories(data) : Observable<any[]> {
           return this.http.post(baseUrl + "/Categories/AddCategories",data, {headers: this.getHeaders()})
           .map((response: Response) => response)

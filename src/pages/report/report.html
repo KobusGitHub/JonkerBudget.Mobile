@@ -11,12 +11,12 @@
       <ion-card-content >
 
         <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
-          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select year" [(ngModel)]='selectedYear' required>
+          <ion-select name="category" style="text-align: left; padding-left: 0px; width: 100%;" placeholder="Select year" [(ngModel)]='selectedYear' required>
               <ion-option *ngFor="let year of years" [value]="year">{{year}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item icon-left style="width: 100%; padding-left: 0px; border-bottom: 0px;">
-          <ion-select name="category" style="text-align: left; padding-left: 0px;" placeholder="Select month" [(ngModel)]='selectedMonth' required>
+          <ion-select name="category" style="text-align: left; padding-left: 0px; width: 100%;" placeholder="Select month" [(ngModel)]='selectedMonth' required>
               <ion-option *ngFor="let month of monthNames" [value]="month">{{month}}</ion-option>
           </ion-select>
         </ion-item>
