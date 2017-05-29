@@ -18,10 +18,12 @@ import { LoadingController } from 'ionic-angular';
 export class SyncPage {
   private loader : any;
 
-  syncYear: number = 2017;
-  syncMonth: string = "May";
+  syncYear: number = 1900;
+  syncMonth: string = "";
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public loading: LoadingController, private toast: ToastProvider, private databaseSqlServiceProvider: DatabaseSqlServiceProvider, private expenseApi: ExpenseApi, private categoryApi: CategoryApi ) {
+    this.syncYear = parseInt(localStorage.getItem('budgetYear')),
+    this.syncMonth = localStorage.getItem('budgetMonth')
   }
 
   ionViewDidLoad() {
@@ -153,7 +155,7 @@ export class SyncPage {
   }
 
   getAllExpensesFromApi(){
-      this.expenseApi.getExpenses()
+      this.expenseApi.getExpenses(this.syncYear, this.syncMonth)
           .subscribe(
               res => {
                   this.loader.dismiss();

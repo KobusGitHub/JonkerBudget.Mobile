@@ -32,8 +32,8 @@ export class ExpenseApi {
 
     
 
-     getExpenses() : Observable<any[]> {
-          return this.http.get(baseUrl + "/Expenses/GetAllExpenses", {headers: this.getHeaders()})
+     getExpenses(year: number, month:string) : Observable<any[]> {
+          return this.http.get(baseUrl + "/Expenses/GetMonthExpenses?year=" + year + "&month=" + month, {headers: this.getHeaders()})
           .map((response: Response) => response.json())
           .catch((error:any) => Observable.throw(error.error || 'Server error'));
      }
