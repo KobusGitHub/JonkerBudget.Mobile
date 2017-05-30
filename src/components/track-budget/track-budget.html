@@ -1,4 +1,4 @@
 <!-- Generated template for the TrackBudget component -->
 <div [style.color]="textColor">
-  {{displayText}}
+  <currency-formatter [numberToFormat]='displayTotal'></currency-formatter>
 </div>

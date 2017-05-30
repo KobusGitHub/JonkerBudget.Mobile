@@ -4,12 +4,18 @@ import { DatabaseSqlServiceProvider, ToastProvider } from '../../shared/shared-p
 import { SqliteCallbackModel} from '../../shared/shared-models'
 import { LoadingController } from 'ionic-angular';
 
+/**
+ * Generated class for the NetReport page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
 @Component({
-  selector: 'page-report',
-  templateUrl: 'report.html',
+  selector: 'page-net-report',
+  templateUrl: 'net-report.html',
 })
-export class ReportPage {
-  loader: any;
+export class NetReportPage {
+loader: any;
 
   monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   years = ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027"];
@@ -17,10 +23,8 @@ export class ReportPage {
   selectedMonth = '';
   selectedYear = 1900;
   showReport = false;
-
-  categories = null;
-  records = [];
-
+  categories = [];
+  
   constructor(public navCtrl: NavController, public navParams: NavParams, private toast: ToastProvider, public loading: LoadingController, public databaseSqlServiceProvider: DatabaseSqlServiceProvider) {
     this.selectedYear = parseInt(localStorage.getItem('budgetYear')),
     this.selectedMonth = localStorage.getItem('budgetMonth')
@@ -38,12 +42,24 @@ export class ReportPage {
   getAllCategoriesCallback(sqliteCallbackModel: SqliteCallbackModel){
     this.loader.dismiss();
     if(sqliteCallbackModel.success){
-      this.categories = sqliteCallbackModel.data;
+      sqliteCallbackModel.data.forEach(cat => {
+        this.categories.push({ 
+          guidId: cat.guidId,
+          categoryName: cat.categoryName,
+          budget: cat.budget,
+          expenseValue: 0,
+          textColor: 'lightgray'
+        })
+      });
+      
     }
   }
 
   generateClick(){
     this.showReport = true;
+    this.categories.forEach(cat => {
+      cat.expenseValue = 0;
+    });
     this.loader = this.loading.create({ 
         content: 'Checking Database, please wait...', 
     }); 
@@ -54,21 +70,22 @@ export class ReportPage {
 
   getAllInPeriodCallback(sqliteCallbackModel: SqliteCallbackModel){
     this.loader.dismiss();
-    this.records = [];
     if(sqliteCallbackModel.success){
-      let catName = '';
-      
+
       sqliteCallbackModel.data.forEach(rec => {
         this.categories.forEach(cat => {
           if(cat.guidId === rec.categoryGuidId){
-            catName = cat.categoryName;
+            cat.expenseValue = parseInt(cat.expenseValue) + parseInt(rec.expenseValue)
+
+            if(cat.expenseValue > cat.budget){
+              cat.textColor = 'red';
+            } else {
+              cat.textColor = 'green';
+            }
           }
         });
 
-        this.records.push({
-          category: catName,
-          expenseValue: rec.expenseValue
-        })
+       
       });
 
      

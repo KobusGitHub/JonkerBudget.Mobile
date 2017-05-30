@@ -3,7 +3,7 @@ import { Nav, Platform, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage } from '../shared/shared-pages';
+import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage, NetReportPage } from '../shared/shared-pages';
 import { DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
     CategorySqlServiceProvider, MockCategorySqlServiceProvider, 
     ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
@@ -29,6 +29,7 @@ export class MyApp {
   private setMonthPage;
   private reportPage; 
   private syncPage;
+  private netReportPage;
 
   loader: any;
   usersInit: boolean = false;
@@ -40,7 +41,6 @@ export class MyApp {
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
     private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
-    public expenseDbProvider:ExpenseSqlServiceProvider, 
     public loading: LoadingController,
     private toast: ToastProvider) {
     this.initializeApp();
@@ -61,6 +61,7 @@ export class MyApp {
     this.setMonthPage = SetMonthPage;
     this.reportPage = ReportPage;
     this.syncPage = SyncPage;
+    this.netReportPage = NetReportPage;
   }
 
   initializeApp() {
@@ -113,7 +114,7 @@ export class MyApp {
     buildDatabase() {
         this.databaseSqlServiceProvider.userDbProvider.initialiseTable(e => this.initialiseUserTableCallback(e));
         this.databaseSqlServiceProvider.categoryDbProvider.initialiseTable(e => this.initialiseBudgetSetupTableCallback(e));
-        this.expenseDbProvider.initialiseTable(e => this.initialiseExpenseTableCallback(e));
+        this.databaseSqlServiceProvider.expenseDbProvider.initialiseTable(e => this.initialiseExpenseTableCallback(e));
 
         this.databaseSqlServiceProvider.userDbProvider.insertRecord({
             id: 0,

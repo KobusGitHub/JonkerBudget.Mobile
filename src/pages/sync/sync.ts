@@ -180,7 +180,7 @@ export class SyncPage {
       this.toast.showToast("Error syncing expenses");
       return;
     }
-    this.toast.showToast("Successfully synced categories");
+    this.toast.showToast("Successfully synced Expenses");
   }
 
 

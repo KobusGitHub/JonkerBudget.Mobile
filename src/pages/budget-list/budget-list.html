@@ -9,7 +9,8 @@
     <button ion-item *ngFor="let item of items" (click)="editClick($event, item)">
       {{item.categoryName}}
       <div class="item-note" item-right>
-        R {{item.budget}}
+        <currency-formatter [numberToFormat]='item.budget'></currency-formatter>
+       
       </div>
     </button>
   </ion-list>

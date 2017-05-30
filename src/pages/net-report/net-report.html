@@ -1,5 +1,5 @@
 <ion-header>
-  <menu-header headerText="Report"></menu-header>
+  <menu-header headerText="Net Report"></menu-header>
 </ion-header>
  
 <ion-content padding>
@@ -46,12 +46,12 @@
               <b>Expence Value</b>
             </ion-col>
           </ion-row>
-          <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of records">
+          <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of categories">
             
             <ion-col>
-              {{record.category}}
+              {{record.categoryName}}
             </ion-col>
-            <ion-col style="text-align: right">
+            <ion-col style="text-align: right"  [style.color]="record.textColor">
               <currency-formatter style="text-align: right" [numberToFormat]='record.expenseValue'></currency-formatter>
             </ion-col>
           

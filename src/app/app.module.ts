@@ -4,12 +4,12 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
-import { HomePage, ListPage, SetupPage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage } from '../shared/shared-pages';
+import { HomePage, ListPage, SetupPage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage, NetReportPage } from '../shared/shared-pages';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent } from '../shared/shared-components';
+import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, CurrencyFormatterComponent } from '../shared/shared-components';
 
 @NgModule({
   declarations: [
@@ -23,9 +23,11 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent } from
     SetMonthPage,
     ReportPage,
     SyncPage,
+    NetReportPage,
     MenuHeaderComponent,
     NoMenuHeaderComponent,
-    TrackBudgetComponent
+    TrackBudgetComponent,
+    CurrencyFormatterComponent
   ],
   imports: [
     BrowserModule,
@@ -44,9 +46,11 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent } from
     SetMonthPage,
     ReportPage,
     SyncPage,
+    NetReportPage,
     MenuHeaderComponent,
     NoMenuHeaderComponent,
-    TrackBudgetComponent
+    TrackBudgetComponent,
+    CurrencyFormatterComponent
   ],
   providers: [
     StatusBar,

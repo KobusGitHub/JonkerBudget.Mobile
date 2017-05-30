@@ -151,13 +151,20 @@ doesTableExist(callbackMethod) {
     var result = this.syncTableInternal(this.getTable(), year, month, expenseModels);
     callbackMethod({success: true, data: result});
   }
-  private syncTableInternal(table, year:number, month:string, userModels): any {
+  private syncTableInternal(table, year:number, month:string, userModels: ExpenseModel[]): any {
       for(let i = table.data.length -1; i >= 0; i--){
         let row = table.data[i];
         if(row.year === year && row.month === month){
           table.data.splice(i, 1);
         }
       }
+
+      userModels.forEach(uModel => {
+        table.data.push(uModel);
+      });
+      
+
+
       localStorage.setItem(this.tableName, JSON.stringify(table));
       return "OK";
   }
@@ -171,7 +178,9 @@ doesTableExist(callbackMethod) {
     
     table.data.forEach(row => {
         if(!row.inSync) {
-            resultData.push(row);
+            if(row.year === year && row.month === month){
+              resultData.push(row);
+            }
         }
     });
         

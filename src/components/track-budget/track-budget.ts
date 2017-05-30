@@ -10,20 +10,21 @@ import { ToastController,Events } from 'ionic-angular';
 export class TrackBudgetComponent {
 
   @Input() categoryGuidId: string;
-  displayText : string;
   expenseTotal: number = 0;
   budgetValue: number = 0;
   haveExpenseTotal: boolean = false;
   haveCategoryBudget: boolean = false;
   
-  textColor = 'black';
+  displayTotal = 0;
+
+  textColor = 'lightgray';
 
   budgetYear = 1900;
   budgetMonth = 'January'
 
   constructor(public databaseDbProvider: DatabaseSqlServiceProvider) {
     this.categoryGuidId = '';
-    this.displayText = '';
+    this.displayTotal = 0;
 
     this.budgetYear = parseInt(localStorage.getItem('budgetYear')),
     this.budgetMonth = localStorage.getItem('budgetMonth')
@@ -39,7 +40,7 @@ export class TrackBudgetComponent {
 
   loadData(){
     if(!this.categoryGuidId || this.categoryGuidId == ''){
-      this.displayText = '';
+      this.displayTotal = 0;
       return;
     }
 
@@ -47,7 +48,7 @@ export class TrackBudgetComponent {
     this.budgetValue = 0;
     this.haveExpenseTotal = false;
     this.haveCategoryBudget = false;
-    this.textColor = 'black';
+    this.textColor = 'lightgray';
 
     
     this.databaseDbProvider.categoryDbProvider.getRecordByGuidId(this.categoryGuidId, e => this.getCategoryCallback(e))
@@ -90,13 +91,14 @@ export class TrackBudgetComponent {
 
   calculateValue(){
     console.log(Number(this.budgetValue) + ' - ' +  Number(this.expenseTotal));
-    let total = this.budgetValue - this.expenseTotal;
-    console.log('total:' + total);
+    this.displayTotal = this.budgetValue - this.expenseTotal;
+    console.log('total:' + this.displayTotal);
     this.textColor = "green"
-    if(total < 0){
+    if(this.displayTotal < 0){
       this.textColor = "red"
     } 
-    this.displayText = 'R' + total.toString();
     
+   
+
   }
 }

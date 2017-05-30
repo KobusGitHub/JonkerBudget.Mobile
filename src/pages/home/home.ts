@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ToastController,Events, LoadingController } from 'ionic-angular';
-import { ToastProvider, ExpenseSqlServiceProvider,CategorySqlServiceProvider, ExpenseApi } from '../../shared/shared-providers'
+import { ToastProvider, DatabaseSqlServiceProvider, ExpenseApi } from '../../shared/shared-providers'
 import { SqliteCallbackModel, CategoryModel, ExpenseModel, ExpenseApiModel } from '../../shared/shared-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -19,8 +19,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
   public toastCtrl: ToastController,public loading: LoadingController, 
-  public expenseDbProvider: ExpenseSqlServiceProvider, 
-  public categoryDbProvider: CategorySqlServiceProvider,
+  public dbProvider: DatabaseSqlServiceProvider,
   public expenseApi: ExpenseApi,
   public builder: FormBuilder,
   private toast: ToastProvider) {
@@ -43,7 +42,7 @@ export class HomePage {
     this.formData.year = parseInt(localStorage.getItem('budgetYear')),
     this.formData.month = localStorage.getItem('budgetMonth')
     this.formData.categoryGuidId = '';
-    this.formData.expenseValue = 0;
+    this.formData.expenseValue = '';
     this.formData.expenseCode = '';
     this.formData.inSync = false;
   }
@@ -54,7 +53,7 @@ export class HomePage {
         content: 'Busy, please wait...',
     });
     this.loader.present().then(() => {
-      this.categoryDbProvider.getAll(e => this.getAllCallback(e));
+      this.dbProvider.categoryDbProvider.getAll(e => this.getAllCallback(e));
     });
 
   }
@@ -145,7 +144,7 @@ export class HomePage {
   saveExpenseToSql(){
     this.loader = this.loading.create({ content: 'Busy saving on device, please wait...' }); 
     this.loader.present().then(() => {
-      this.expenseDbProvider.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
+      this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
     });
   }
 
@@ -234,7 +233,7 @@ export class HomePage {
   saveTransferToSql(){
     this.loader = this.loading.create({ content: 'Busy saving transfer on device, please wait...' }); 
     this.loader.present().then(() => {
-      this.expenseDbProvider.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
+      this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
     });
   }
 
