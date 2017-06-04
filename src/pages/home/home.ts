@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ToastController,Events, LoadingController } from 'ionic-angular';
-import { ToastProvider, DatabaseSqlServiceProvider, ExpenseApi } from '../../shared/shared-providers'
+import { ToastProvider, DatabaseSqlServiceProvider, ExpenseApi, OnesignalServiceProvider } from '../../shared/shared-providers'
 import { SqliteCallbackModel, CategoryModel, ExpenseModel, ExpenseApiModel } from '../../shared/shared-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -15,14 +15,21 @@ export class HomePage {
   categories: CategoryModel[] = [];
   isTransferExpense: boolean = false;
   transferToGuidId = '';
-        
+
+  isDatabaseActive = false;
+  isPushNotificationsActive = false;        
+  pushNotificationPlayers: string[] = [];
 
   constructor(public navCtrl: NavController,
   public toastCtrl: ToastController,public loading: LoadingController, 
   public dbProvider: DatabaseSqlServiceProvider,
   public expenseApi: ExpenseApi,
   public builder: FormBuilder,
-  private toast: ToastProvider) {
+  private toast: ToastProvider, private onesignalServiceProvider: OnesignalServiceProvider ) {
+
+    this.isDatabaseActive = false;
+    this.isPushNotificationsActive = false;     
+    this.pushNotificationPlayers = ['3a99540f-e012-4423-b31b-e794e790b13e'];
      
   }
 
@@ -47,7 +54,7 @@ export class HomePage {
     this.formData.inSync = false;
   }
 
-   loadData(){
+  loadData(){
     
     this.loader = this.loading.create({
         content: 'Busy, please wait...',
@@ -99,7 +106,11 @@ export class HomePage {
       }
     }
 
-    this.saveExpenseToApi();
+    if(this.isDatabaseActive){
+      this.saveExpenseToApi();
+    } else {
+      this.saveExpenseToSql();
+    }
 
   }
 
@@ -181,8 +192,15 @@ export class HomePage {
 
         if(result.success) {
             this.toast.showToast('Saved expense successfully');
+
+            // Push Notification
+            if(this.isPushNotificationsActive){
+              this.sendPushNotification();
+            }
+
+
             if(this.isTransferExpense){
-              this.saveTransferToApi();
+              this.saveTransfer();
             }
             this.navCtrl.setRoot(HomePage);
             return;
@@ -193,22 +211,42 @@ export class HomePage {
         
     }
 
-  
+  sendPushNotification(){
+    this.onesignalServiceProvider.sendNotification(this.pushNotificationPlayers, 'Expense Added', 'Expense Added Message', this.modelToSave)
+      .subscribe(
+      res => {
+        alert("message sent");
+      },
+      err => {
+        alert(err.message);
+        return;
+      }
+      ); 
+  }
+
+  saveTransfer(){
+    this.modelToSave = {
+      id: 0,
+      year: parseInt(localStorage.getItem('budgetYear')),
+      month: localStorage.getItem('budgetMonth'),
+      categoryGuidId: this.transferToGuidId,
+      expenseValue: this.formData.expenseValue,
+      recordDate: new Date().toString(),
+      expenseCode: this.getNewExpenseCode(),
+      inSync: false
+    }
+
+    if (this.isDatabaseActive) {
+      this.saveTransferToApi();
+    } else {
+      this.saveTransferToSql();
+    }
+   
+  }
 
  saveTransferToApi(){
     this.loader = this.loading.create({ content: 'Busy uploading transfer, please wait...' }); 
     this.loader.present().then(() => {
-
-      this.modelToSave = {
-        id: 0,
-        year: parseInt(localStorage.getItem('budgetYear')),
-        month: localStorage.getItem('budgetMonth'),
-        categoryGuidId: this.transferToGuidId,
-        expenseValue: this.formData.expenseValue,
-        recordDate: new Date().toString(),
-        expenseCode: this.getNewExpenseCode(),
-        inSync: false
-      }
 
        this.expenseApi.addExpense(this.buildApiModelFromSqlModel(this.modelToSave))
           .subscribe(
@@ -237,50 +275,24 @@ export class HomePage {
     });
   }
 
+  transferToExpenseTableCallback(result: SqliteCallbackModel){
+      this.loader.dismiss();
+      if(result.success) {
+          this.toast.showToast('Transfer to successfully');
 
+          // Push Notification
+          if (this.isPushNotificationsActive) {
+            this.sendPushNotification();
+          }
 
-
-    // transferFromExpenseTableCallback(result: SqliteCallbackModel){
-    //     if(result.success) {
-    //         this.toast.showToast('Transfer from successfully');
-    //         //this.loader.dismiss();
-
-    //         let eValue = Number(this.formData.expenseValue);
-    //         console.log(eValue);
-    //         let toExpenseModel: ExpenseModel = {
-    //           id: 0,
-    //           year: parseInt(localStorage.getItem('budgetYear')),
-    //           month: localStorage.getItem('budgetMonth'),
-    //           categoryGuidId: this.transferToGuidId,
-    //           expenseValue: this.formData.expenseValue,
-    //           recordDate: new Date().toString(),
-    //           expenseCode: this.getNewExpenseCode(),
-    //       inSync: false
-    //         }
-    //         this.expenseDbProvider.insertRecord(toExpenseModel, e => this.transferToExpenseTableCallback(e));
-            
-
-    //         //this.navCtrl.setRoot(HomePage);
-    //         return;
-    //     }
-    //     console.log(result.data);
-    //     this.toast.showToast('Error');
-    //     alert(JSON.stringify(result.data));
-    //     this.loader.dismiss();
-    // }
-
-    transferToExpenseTableCallback(result: SqliteCallbackModel){
-       this.loader.dismiss();
-       if(result.success) {
-            this.toast.showToast('Transfer to successfully');
-            this.navCtrl.setRoot(HomePage);
-            return;
-        }
-        console.log(result.data);
-        this.toast.showToast('Error saving transfer');
-        alert(JSON.stringify(result.data));
-        
-    }
+          this.navCtrl.setRoot(HomePage);
+          return;
+      }
+      console.log(result.data);
+      this.toast.showToast('Error saving transfer');
+      alert(JSON.stringify(result.data));
+      
+  }
 
 
 

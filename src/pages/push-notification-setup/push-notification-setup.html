@@ -1,0 +1,66 @@
+<ion-header>
+  <menu-header headerText="Push Notification Setup"></menu-header>
+</ion-header>
+
+<ion-content padding>
+
+<ion-card>
+  <ion-card-header>
+    Your PlayerId: 
+  </ion-card-header>
+
+  <ion-card-content>
+    <input type='text' [value]="myPlayerId" style="width: 100%; border-width: 0px;">
+   
+    <ion-item>
+      <ion-label floating>
+        <b>Expense Value</b>
+      </ion-label>
+      <ion-input type="text" maxlength="37" [(ngModel)]='newPlayerId'></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <button ion-buttons ion-item (click)="addFriendPlayerId()" [disabled]="newPlayerId === ''">
+        <div class="item-note" item-right>
+            Add
+          </div>
+      </button>
+    </ion-item>
+
+  </ion-card-content>
+</ion-card>
+
+
+<ion-card >
+  <ion-card-header>
+    Friends PlayerId's'
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+
+      <ion-row  *ngFor="let friendPlayerId of friendsPlayerIds">
+        {{friendPlayerId}}
+        <ion-item>
+          <button ion-buttons ion-item style="color: red;" (click)="removeFriendPlayerId(friendPlayerId)">
+            <div class="item-note" item-right>
+              Remove
+            </div>
+          </button>
+        </ion-item>
+      </ion-row>
+      
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
+
+
+
+</ion-content>
+
+<ion-footer>
+  <button ion-buttons ion-item (click)="sendClick()">
+    <div class="item-note" item-right>
+        Send test notifications to all friends
+      </div>
+  </button>
+</ion-footer>
