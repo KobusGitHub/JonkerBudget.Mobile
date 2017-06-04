@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, LoadingController } from 'ionic-angular';
+import { Nav, Platform, LoadingController, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -7,7 +7,7 @@ import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPag
 import { DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
     CategorySqlServiceProvider, MockCategorySqlServiceProvider, 
     ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-    SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi } from '../shared/shared-providers'
+    SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider } from '../shared/shared-providers'
 
 import { SqliteCallbackModel } from '../shared/shared-models';
 
@@ -16,12 +16,14 @@ import { SqliteCallbackModel } from '../shared/shared-models';
   providers: [DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider, 
             CategorySqlServiceProvider, MockCategorySqlServiceProvider,
             ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-            SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi]
+      SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = TempPage;
+
+  private useAPI: boolean = false;
 
   private homePage;
   private sqlitePage;
@@ -42,10 +44,28 @@ export class MyApp {
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
     private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
     public loading: LoadingController,
+    public events: Events,
     private toast: ToastProvider) {
     this.initializeApp();
+    
+    localStorage.setItem('browserMode', 'true');  
+    
+        
+    if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
+    {
+        localStorage.setItem('useAPI', 'false'); 
+    }
 
-    localStorage.setItem('browserMode','false');  
+    if (localStorage.getItem("useAPI") === 'true'){
+        this.useAPI = true;
+    } else {
+        this.useAPI = false;
+    }
+    
+
+
+
+
 
     if(localStorage.getItem('budgetYear') === undefined ||  localStorage.getItem('budgetYear') === null){
         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -62,6 +82,16 @@ export class MyApp {
     this.reportPage = ReportPage;
     this.syncPage = SyncPage;
     this.netReportPage = NetReportPage;
+  }
+
+  useApiChange(){
+      
+      if (this.useAPI === true) {
+          localStorage.setItem('useAPI', 'true');
+      } else {
+          localStorage.setItem('useAPI', 'false');
+      }
+      this.events.publish('UseApiChanged', Date.now());
   }
 
   initializeApp() {

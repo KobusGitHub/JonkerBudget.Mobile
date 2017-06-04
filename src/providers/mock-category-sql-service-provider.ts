@@ -154,6 +154,10 @@ export class MockCategorySqlServiceProvider implements CategorySqlServiceProvide
   private syncTableInternal(table, userModels): any {
       
       table.data = [];
+
+      userModels.forEach(uModel => {
+        uModel.inSync = true;
+      });
       table.data = userModels;
 
       localStorage.setItem(this.tableName, JSON.stringify(table));

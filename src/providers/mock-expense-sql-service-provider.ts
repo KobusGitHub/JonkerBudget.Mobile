@@ -160,6 +160,7 @@ doesTableExist(callbackMethod) {
       }
 
       userModels.forEach(uModel => {
+        uModel.inSync = true;
         table.data.push(uModel);
       });
       
@@ -179,6 +180,7 @@ doesTableExist(callbackMethod) {
     table.data.forEach(row => {
         if(!row.inSync) {
             if(row.year === year && row.month === month){
+              row.recordDate = new Date(row.recordDate),
               resultData.push(row);
             }
         }

@@ -3,6 +3,16 @@
       <ion-icon ios="ios-menu" md="ios-menu"></ion-icon>
     </button>
     <ion-title>{{headerText}}</ion-title>
+    
     <ion-buttons end>
+      <div>
+        <ion-icon ios="ios-cloud-download-outline" md="ios-cloud-download-outline" style="font-size: 30px; color: white; margin-right: 10px;"
+          (click)="syncClick()"></ion-icon>
+      </div>
     </ion-buttons>
+
+    <!--<ion-buttons end>
+          <ion-icon ios="ios-cloud-download-outline" md="ios-cloud-download-outline" style="font-size: 30px; color: white; margin-right: 10px;" (click)="syncClick()"></ion-icon>  
+    </ion-buttons>-->
+    
   </ion-navbar>

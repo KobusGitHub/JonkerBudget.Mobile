@@ -34,10 +34,10 @@
               Net Report
       </button>
 
-      <button menuClose ion-item icon-left  (click)="navigatePage(syncPage)">
+      <!--<button menuClose ion-item icon-left  (click)="navigatePage(syncPage)">
           <ion-icon ios="ios-cloud-upload-outline" md="ios-cloud-upload-outline"></ion-icon>
               Sync
-      </button>
+      </button>-->
 
 
 
@@ -47,6 +47,10 @@
               SQlite
       </button>
       
+      <ion-item icon-left>
+        <ion-label>Use API</ion-label>
+        <ion-checkbox color="secondary" [(ngModel)]="useAPI" (click)="useApiChange()"></ion-checkbox>
+    </ion-item>
       
 
     </ion-list>

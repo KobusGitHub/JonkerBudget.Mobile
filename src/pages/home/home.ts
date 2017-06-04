@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { ToastController,Events, LoadingController } from 'ionic-angular';
+import { ToastController, Events, LoadingController } from 'ionic-angular';
 import { ToastProvider, DatabaseSqlServiceProvider, ExpenseApi } from '../../shared/shared-providers'
 import { SqliteCallbackModel, CategoryModel, ExpenseModel, ExpenseApiModel } from '../../shared/shared-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -15,15 +15,31 @@ export class HomePage {
   categories: CategoryModel[] = [];
   isTransferExpense: boolean = false;
   transferToGuidId = '';
-        
+
+  useAPI: boolean = false;        
 
   constructor(public navCtrl: NavController,
   public toastCtrl: ToastController,public loading: LoadingController, 
   public dbProvider: DatabaseSqlServiceProvider,
   public expenseApi: ExpenseApi,
   public builder: FormBuilder,
-  private toast: ToastProvider) {
-     
+  private toast: ToastProvider, public events: Events) {
+
+    this.setUseApiValue();
+
+    events.subscribe('UseApiChanged', (time) => {
+      this.setUseApiValue();
+    });
+    
+  }
+
+  private setUseApiValue(){
+    if (localStorage.getItem("useAPI") === 'true') {
+      this.useAPI = true;
+    } else {
+      this.useAPI = false;
+    }
+   
   }
 
    ionViewDidLoad() {
@@ -99,8 +115,21 @@ export class HomePage {
       }
     }
 
-    this.saveExpenseToApi();
+    this.saveExpense();
 
+  }
+
+
+  saveExpense(){
+    this.loader = this.loading.create({ content: 'Saving, please wait...' });
+    this.loader.present().then(() => {
+      if(this.useAPI){
+        this.saveExpenseToApi();
+      } else {
+        this.modelToSave.inSync = false;
+        this.saveExpenseToSql();
+      }
+    });
   }
 
   buildApiModelFromSqlModel(sqlModel: ExpenseModel): ExpenseApiModel {
@@ -118,34 +147,28 @@ export class HomePage {
   }
 
   saveExpenseToApi(){
-    this.loader = this.loading.create({ content: 'Busy uploading expense, please wait...' }); 
-    this.loader.present().then(() => {
-
+    this.loader.setContent('Uploading to database, please wait..');
        
-       this.expenseApi.addExpense(this.buildApiModelFromSqlModel(this.modelToSave))
-          .subscribe(
-              res => {
-                  this.loader.dismiss();
-                  this.modelToSave.inSync = true;
-                  this.saveExpenseToSql();
-                  return;
-              },
-              err => {
-                  this.loader.dismiss();
-                  alert('Could not upload to server');
-                  this.modelToSave.inSync = false;
-                  this.saveExpenseToSql();
-                  return;
-              }
-          );
-    });
+    this.expenseApi.addExpense(this.buildApiModelFromSqlModel(this.modelToSave))
+      .subscribe(
+          res => {
+              this.modelToSave.inSync = true;
+              this.saveExpenseToSql();
+              return;
+          },
+          err => {
+              alert('Could not upload to server');
+              this.modelToSave.inSync = false;
+              this.saveExpenseToSql();
+              return;
+          }
+      );
+
   }
 
   saveExpenseToSql(){
-    this.loader = this.loading.create({ content: 'Busy saving on device, please wait...' }); 
-    this.loader.present().then(() => {
-      this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
-    });
+    this.loader.setContent('Saving to device, please wait..');
+    this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
   }
 
 
@@ -177,111 +200,81 @@ export class HomePage {
   }
   
   insertExpenseTableCallback(result: SqliteCallbackModel){
-        this.loader.dismiss();
-
-        if(result.success) {
-            this.toast.showToast('Saved expense successfully');
-            if(this.isTransferExpense){
-              this.saveTransferToApi();
-            }
-            this.navCtrl.setRoot(HomePage);
-            return;
+    if(result.success) {
+        if(this.isTransferExpense){
+          this.saveTransfer();
+          return;
         }
-        console.log(result.data);
-        this.toast.showToast('Error saving expense');
-        alert(JSON.stringify(result.data));
-        
+        this.loader.dismiss();
+        this.toast.showToast('Saved expense successfully');
+        this.navCtrl.setRoot(HomePage);
+        return;
     }
 
-  
+    this.loader.dismiss();
+    console.log(result.data);
+    this.toast.showToast('Error saving expense');
+    alert(JSON.stringify(result.data));
+    
+    }
 
- saveTransferToApi(){
-    this.loader = this.loading.create({ content: 'Busy uploading transfer, please wait...' }); 
-    this.loader.present().then(() => {
+  saveTransfer(){
+    this.modelToSave = {
+      id: 0,
+      year: parseInt(localStorage.getItem('budgetYear')),
+      month: localStorage.getItem('budgetMonth'),
+      categoryGuidId: this.transferToGuidId,
+      expenseValue: this.formData.expenseValue,
+      recordDate: new Date().toString(),
+      expenseCode: this.getNewExpenseCode(),
+      inSync: false
+    }
 
-      this.modelToSave = {
-        id: 0,
-        year: parseInt(localStorage.getItem('budgetYear')),
-        month: localStorage.getItem('budgetMonth'),
-        categoryGuidId: this.transferToGuidId,
-        expenseValue: this.formData.expenseValue,
-        recordDate: new Date().toString(),
-        expenseCode: this.getNewExpenseCode(),
-        inSync: false
-      }
 
-       this.expenseApi.addExpense(this.buildApiModelFromSqlModel(this.modelToSave))
-          .subscribe(
-              res => {
-                  this.loader.dismiss();
-                  this.modelToSave.inSync = true;
-                  this.saveTransferToSql();
-                  return;
-              },
-              err => {
-                  this.loader.dismiss();
-                  this.toast.showToast('Could not upload to server');
-                  this.modelToSave.inSync = false;
-                  this.saveTransferToSql();
-                  return;
-              }
-          );
-    });
+    if(this.useAPI){
+      this.saveTransferToApi();
+    } else {
+      this.modelToSave.inSync = false;
+      this.saveTransferToSql();
+    }
   }
 
+  saveTransferToApi(){
+    this.loader.setContent('Uploading transfer to database, please wait..');
+   
+    this.expenseApi.addExpense(this.buildApiModelFromSqlModel(this.modelToSave))
+      .subscribe(
+          res => {
+              this.modelToSave.inSync = true;
+              this.saveTransferToSql();
+              return;
+          },
+          err => {
+              this.toast.showToast('Could not upload to server');
+              this.modelToSave.inSync = false;
+              this.saveTransferToSql();
+              return;
+          }
+      );
+   
+  }
 
   saveTransferToSql(){
-    this.loader = this.loading.create({ content: 'Busy saving transfer on device, please wait...' }); 
-    this.loader.present().then(() => {
-      this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
-    });
+    this.loader.setContent('Saving transfer to device, please wait..');
+    this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
   }
 
-
-
-
-    // transferFromExpenseTableCallback(result: SqliteCallbackModel){
-    //     if(result.success) {
-    //         this.toast.showToast('Transfer from successfully');
-    //         //this.loader.dismiss();
-
-    //         let eValue = Number(this.formData.expenseValue);
-    //         console.log(eValue);
-    //         let toExpenseModel: ExpenseModel = {
-    //           id: 0,
-    //           year: parseInt(localStorage.getItem('budgetYear')),
-    //           month: localStorage.getItem('budgetMonth'),
-    //           categoryGuidId: this.transferToGuidId,
-    //           expenseValue: this.formData.expenseValue,
-    //           recordDate: new Date().toString(),
-    //           expenseCode: this.getNewExpenseCode(),
-    //       inSync: false
-    //         }
-    //         this.expenseDbProvider.insertRecord(toExpenseModel, e => this.transferToExpenseTableCallback(e));
-            
-
-    //         //this.navCtrl.setRoot(HomePage);
-    //         return;
-    //     }
-    //     console.log(result.data);
-    //     this.toast.showToast('Error');
-    //     alert(JSON.stringify(result.data));
-    //     this.loader.dismiss();
-    // }
-
-    transferToExpenseTableCallback(result: SqliteCallbackModel){
-       this.loader.dismiss();
-       if(result.success) {
-            this.toast.showToast('Transfer to successfully');
-            this.navCtrl.setRoot(HomePage);
-            return;
-        }
-        console.log(result.data);
-        this.toast.showToast('Error saving transfer');
-        alert(JSON.stringify(result.data));
-        
-    }
-
-
+  transferToExpenseTableCallback(result: SqliteCallbackModel){
+      this.loader.dismiss();
+      if(result.success) {
+          this.toast.showToast('Transfer to successfully');
+          this.navCtrl.setRoot(HomePage);
+          return;
+      }
+      console.log(result.data);
+      this.toast.showToast('Error saving transfer');
+      alert(JSON.stringify(result.data));
+      
+  }
 
 }

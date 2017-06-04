@@ -10,3 +10,4 @@ export * from '../providers/expense-api-service-provider';
 export * from '../providers/category-api-service-provider';
 
 export * from '../providers/database-service-provider'
+export * from '../providers/sync-service-provider';

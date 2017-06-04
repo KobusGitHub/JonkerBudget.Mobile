@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { SyncServiceProvider } from '../../shared/shared-providers';
 
 /*
   Generated class for the MenuHeader component.
@@ -16,8 +17,11 @@ export class MenuHeaderComponent {
   headerText: string = '';
 //text: string;
 
-  constructor() {
+  constructor(private syncService: SyncServiceProvider) {
     //this.text = 'Hello World';
   }
 
+  syncClick(){
+    this.syncService.sync();
+  }
 }
