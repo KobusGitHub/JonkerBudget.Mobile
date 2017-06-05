@@ -16,34 +16,58 @@ export class SetupPage {
   private budgetSetupId = 0;
   frmBudget: FormGroup;
   formData: any = {};
+  useAPI: boolean = false;        
+
+  isFavourite = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
     public loading: LoadingController, public events: Events, public categoryApi: CategoryApi,
     private toast: ToastProvider, public builder: FormBuilder) {
-       this.budgetSetupId = parseInt(this.navParams.get('budgetSetupId'));
+      this.budgetSetupId = parseInt(this.navParams.get('budgetSetupId'));
 
-       console.log(this.budgetSetupId);
+      this.setUseApiValue();
+      events.subscribe('UseApiChanged', (time) => {
+        this.setUseApiValue();
+      });
 
-       if(!this.budgetSetupId){
-         this.budgetSetupId = 0
-       }
-       console.log(this.budgetSetupId);
+      console.log(this.budgetSetupId);
 
-        this.frmBudget = builder.group({
+      if(!this.budgetSetupId){
+        this.budgetSetupId = 0
+      }
+      console.log(this.budgetSetupId);
+
+      this.frmBudget = builder.group({
           'frmCmpCategory': [{ value: '' },Validators.required],
           'frmCmpBudget': [{ value: '' },Validators.required]
       });
 
+
       this.loadData();
       console.log(this.formData);
+
+  }
+
+  private setUseApiValue() {
+    if (localStorage.getItem("useAPI") === 'true') {
+      this.useAPI = true;
+    } else {
+      this.useAPI = false;
+    }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad Setup');
   }
 
+  favouriteClick(){
+    console.log("favouriteClick");
+    
+    this.isFavourite = !this.isFavourite ;
+  }
 
+  
   loadData(){
     if(this.budgetSetupId === 0){
       this.buildEmptyModel();
@@ -61,6 +85,7 @@ export class SetupPage {
   getRecordCallback(result: SqliteCallbackModel){
     if(result.success) {
       this.formData = result.data;
+      this.isFavourite = result.data.isFavourite;
       this.loader.dismiss();
       return;
     }
@@ -73,6 +98,7 @@ export class SetupPage {
     this.formData.guidId = '';
     this.formData.categoryName = '';
     this.formData.budget = '';
+    this.formData.isFavourite = false;
     this.formData.inSync = false;
   }
 
@@ -85,6 +111,7 @@ export class SetupPage {
       guidId: this.formData.guidId,
       categoryName: frmCmps.frmCmpCategory,
       budget: frmCmps.frmCmpBudget,
+      isFavourite: this.isFavourite,
       inSync: false
     }
 
@@ -92,7 +119,12 @@ export class SetupPage {
     if(this.budgetSetupId === 0){
        this.modelToSave.guidId = this.getNewGuid();
     }
-    this.saveCategoryToApi();
+
+    if(this.useAPI === true){
+      this.saveCategoryToApi();
+    } else {
+      this.saveCategoryToSql();
+    }
   }
 
 

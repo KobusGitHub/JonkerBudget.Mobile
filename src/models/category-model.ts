@@ -3,5 +3,6 @@ export class CategoryModel {
   guidId: string;
   categoryName: string;
   budget: number;
+  isFavourite: boolean;
   inSync: boolean;
 }

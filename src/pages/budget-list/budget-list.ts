@@ -19,6 +19,7 @@ export class BudgetListPage {
       this.loadBudget();
     });
 
+   
   }
 
   ionViewDidLoad() {
@@ -46,6 +47,7 @@ export class BudgetListPage {
         this.toast.showToast('Error');
         alert(JSON.stringify(result.data));
       }
+      
       this.items = result.data;
   }
 

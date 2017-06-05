@@ -48,7 +48,7 @@ export class MyApp {
     private toast: ToastProvider) {
     this.initializeApp();
     
-    localStorage.setItem('browserMode', 'true');  
+    localStorage.setItem('browserMode', 'false');  
     
         
     if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)

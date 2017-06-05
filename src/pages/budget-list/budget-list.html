@@ -7,7 +7,11 @@
 <ion-content padding>
   <ion-list>
     <button ion-item *ngFor="let item of items" (click)="editClick($event, item)">
-      {{item.categoryName}}
+      <div class="item-note" item-left>
+        <ion-icon *ngIf="item.isFavourite" ios="ios-star" md="ios-star" style="font-size: 30px; color: Red; margin-right: 10px;"></ion-icon>
+        <ion-icon *ngIf="!item.isFavourite" ios="ios-star-outline" md="ios-star-outline" style="font-size: 30px; color: lightgray; margin-right: 10px;"></ion-icon>
+      </div>
+      <div class="item-note" item-left>{{item.categoryName}}</div>
       <div class="item-note" item-right>
         <currency-formatter [numberToFormat]='item.budget'></currency-formatter>
        

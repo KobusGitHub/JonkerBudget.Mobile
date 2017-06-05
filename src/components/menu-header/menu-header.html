@@ -5,7 +5,7 @@
     <ion-title>{{headerText}}</ion-title>
     
     <ion-buttons end>
-      <div>
+      <div *ngIf="useAPI">
         <ion-icon ios="ios-cloud-download-outline" md="ios-cloud-download-outline" style="font-size: 30px; color: white; margin-right: 10px;"
           (click)="syncClick()"></ion-icon>
       </div>

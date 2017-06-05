@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { DatabaseSqlServiceProvider, ToastProvider } from '../../shared/shared-providers'
 import { SqliteCallbackModel} from '../../shared/shared-models'
 import { LoadingController } from 'ionic-angular';
@@ -25,9 +25,10 @@ loader: any;
   showReport = false;
   categories = [];
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, private toast: ToastProvider, public loading: LoadingController, public databaseSqlServiceProvider: DatabaseSqlServiceProvider) {
-    this.selectedYear = parseInt(localStorage.getItem('budgetYear')),
-    this.selectedMonth = localStorage.getItem('budgetMonth')
+  constructor(private events: Events, public navCtrl: NavController, public navParams: NavParams, private toast: ToastProvider, public loading: LoadingController, public databaseSqlServiceProvider: DatabaseSqlServiceProvider) {
+    this.selectedYear = parseInt(localStorage.getItem('budgetYear'));
+    this.selectedMonth = localStorage.getItem('budgetMonth');
+  
   }
 
   ionViewDidLoad() {
@@ -37,6 +38,8 @@ loader: any;
     this.loader.present().then(() => {
         this.databaseSqlServiceProvider.categoryDbProvider.getAll(e => this.getAllCategoriesCallback(e)); 
     });
+
+    
   }
 
   getAllCategoriesCallback(sqliteCallbackModel: SqliteCallbackModel){

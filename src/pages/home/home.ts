@@ -30,6 +30,7 @@ export class HomePage {
     events.subscribe('UseApiChanged', (time) => {
       this.setUseApiValue();
     });
+
     
   }
 

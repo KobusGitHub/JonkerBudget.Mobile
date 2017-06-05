@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from 'ionic-angular';
+import { ToastController, Events } from 'ionic-angular';
 import { DatabaseSqlServiceProvider, ExpenseApi, CategoryApi, ToastProvider } from '../shared/shared-providers';
 import { SqliteCallbackModel, ExpenseModel, CategoryModel } from '../shared/shared-models';
 import { LoadingController } from 'ionic-angular';
@@ -11,18 +11,19 @@ export class SyncServiceProvider {
 
     private syncYear: number = 1900;
     private syncMonth: string = "";
+    callbackMethod: any;
 
-    constructor(private loading: LoadingController, private toast: ToastProvider, private databaseSqlServiceProvider: DatabaseSqlServiceProvider, private expenseApi: ExpenseApi, private categoryApi: CategoryApi) {
+    constructor(private events: Events, private loading: LoadingController, private toast: ToastProvider, private databaseSqlServiceProvider: DatabaseSqlServiceProvider, private expenseApi: ExpenseApi, private categoryApi: CategoryApi) {
         this.syncYear = parseInt(localStorage.getItem('budgetYear')),
             this.syncMonth = localStorage.getItem('budgetMonth')
     }
 
    
 
-    sync() {
+    sync(callbackMethod) {
         this.syncCategories();
         //this.databaseSqlServiceProvider.expenseDbProvider.getAllNonSyncedRecords(2017, 'May', e => this.getAllNonSyncedRecordsCallback(e));
-
+        this.callbackMethod = callbackMethod;
     }
 
     // CATEGORIES
@@ -164,6 +165,10 @@ export class SyncServiceProvider {
 
     private syncExpensesCallback(sqliteCallbackModel: SqliteCallbackModel) {
         this.loader.dismiss();
+        
+
+        this.callbackMethod();
+
         if (!sqliteCallbackModel.success) {
             this.toast.showToast("Error syncing expenses");
             return;

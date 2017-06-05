@@ -38,7 +38,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('CREATE TABLE IF NOT EXISTS Category(id INTEGER PRIMARY KEY AUTOINCREMENT, guidId TEXT, categoryName TEXT, budget NUMERIC, inSync NUMERIC)', {}).then((data) => {
+      this.db.executeSql('CREATE TABLE IF NOT EXISTS Category(id INTEGER PRIMARY KEY AUTOINCREMENT, guidId TEXT, categoryName TEXT, budget NUMERIC, isFavourite NUMERIC, inSync NUMERIC)', {}).then((data) => {
         callbackMethod({success: true, data: data.rows.item(0)});
       }, (err) => {
         callbackMethod({success: false, data: err});
@@ -55,11 +55,12 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, inSync) VALUES (?, ?, ?, ?)'
+      this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, isFavourite, inSync) VALUES (?, ?, ?, ?, ?)'
       , [
           categoryModel.guidId,
           categoryModel.categoryName, 
           categoryModel.budget, 
+          this.boolToNum(categoryModel.isFavourite),
           this.boolToNum(categoryModel.inSync)
         ]).then((data) => {
         callbackMethod({success: true, data: data});
@@ -79,7 +80,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
     }).then(() => {
         // WORK
 
-        let sql = "UPDATE Category SET guidId = '" + categoryModel.guidId + "', categoryName = '" + categoryModel.categoryName + "', budget = " + categoryModel.budget + ",  inSync = " + this.boolToNum(categoryModel.inSync) + " WHERE id = " + categoryModel.id;
+      let sql = "UPDATE Category SET guidId = '" + categoryModel.guidId + "', categoryName = '" + categoryModel.categoryName + "', budget = " + categoryModel.budget + ",  isFavourite = " + this.boolToNum(categoryModel.isFavourite) + ",  inSync = " + this.boolToNum(categoryModel.inSync) + " WHERE id = " + categoryModel.id;
         this.db.executeSql(sql, {}).then((data) => {
           callbackMethod({success: true, data: data});
         }, (err) => {
@@ -107,6 +108,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
                   guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
+                  isFavourite: this.numToBool(data.rows.item(i).isFavourite),
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 };
             }
@@ -138,6 +140,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
                   guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
+                  isFavourite: this.numToBool(data.rows.item(i).isFavourite),
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 };
             }
@@ -161,7 +164,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql("SELECT * FROM Category ORDER BY categoryName",[]).then((data) => {
+      this.db.executeSql("SELECT * FROM Category ORDER BY isFavourite DESC, categoryName",[]).then((data) => {
         result = [];
         if(data.rows.length > 0) {
             for(var i = 0; i < data.rows.length; i++) {
@@ -170,6 +173,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
                   guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
+                  isFavourite: this.numToBool(data.rows.item(i).isFavourite),
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 });
             }
@@ -208,6 +212,16 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       location: 'default' // the location field is required
     }).then(() => {
 
+      let favourites: string [] = [];
+      this.db.executeSql('SELECT guidId FROM Category WHERE isFavourite = 1', {}).then((data) => { 
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            favourites.push(data.rows.item(i).guidId)
+          }
+        }
+      }, (err) => { });
+
+
       this.db.executeSql('DELETE FROM Category', {}).then((data) => {} , (err) => {
         callbackMethod({success: false, data: err}); 
         return;
@@ -216,11 +230,20 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
       for(var index = 0; index < budgetSetupModels.length; index++){
         let categoryModel = budgetSetupModels[index];  
 
-        this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, inSync) VALUES (?, ?, ?, ?)'
+        let isFav = 0;
+        favourites.forEach(favourite => {
+          if(favourite === categoryModel.guidId){
+            isFav = 1;
+          }
+        });
+        
+        
+        this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, isFavourite, inSync) VALUES (?, ?, ?, ?, ?)'
         , [
             categoryModel.guidId, 
             categoryModel.categoryName, 
             categoryModel.budget,
+            isFav,
             1
           ]).then((data) => {
             //callbackMethod({success: true, data: data});
@@ -253,6 +276,7 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
                   guidId: data.rows.item(i).guidId,
                   categoryName: data.rows.item(i).categoryName,
                   budget: data.rows.item(i).budget,
+                  isFavourite: this.numToBool(data.rows.item(i).isFavourite),
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 });
             }

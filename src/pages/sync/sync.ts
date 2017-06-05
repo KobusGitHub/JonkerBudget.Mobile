@@ -21,9 +21,12 @@ export class SyncPage {
     console.log('ionViewDidLoad Sync');
   }
 
-  syncClick(){
-    this.syncService.sync();
+  
+  syncClick() {
+    this.syncService.sync(e => this.callback(e));
   }
-
+  callback(data: any) {
+    
+  }
  
 }
