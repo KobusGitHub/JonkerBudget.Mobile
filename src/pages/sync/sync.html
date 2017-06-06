@@ -7,9 +7,12 @@
 </ion-content>
 
 <ion-footer>
-  <button ion-buttons ion-item (click)="syncClick()">
-    <div class="item-note" item-right>
-        Sync
-      </div>
-  </button>
+  <ion-toolbar>
+    <ion-buttons right>
+      <button ion-button icon-right (click)="syncClick()">
+            Sync
+          <ion-icon name="arrow-dropright"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-footer>

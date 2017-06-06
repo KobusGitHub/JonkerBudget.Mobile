@@ -29,9 +29,12 @@
 </ion-content>
 
 <ion-footer>
-  <button ion-buttons ion-item (click)="saveClick()">
-    <div class="item-note" item-right>
+  <ion-toolbar>
+    <ion-buttons right>
+      <button ion-button icon-right (click)="saveClick()">
         Save
-      </div>
-  </button>
+        <ion-icon name="arrow-dropright"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-footer>

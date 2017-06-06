@@ -42,3 +42,14 @@
       </div>
   </button>
 </ion-footer>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons right>
+      <button ion-button icon-right [disabled]='!frmBudget.valid' (click)="saveClick(frmBudget.value)">
+            Save
+          <ion-icon name="arrow-dropright"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

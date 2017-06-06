@@ -206,58 +206,121 @@ export class CategorySqlServiceProvider implements CategorySqlServiceProviderInt
 
   }
 
-  syncTable(budgetSetupModels: CategoryModel[], callbackMethod){
+  // syncTable(budgetSetupModels: CategoryModel[], callbackMethod){
+  //   this.db.openDatabase({
+  //     name: 'data.db',
+  //     location: 'default' // the location field is required
+  //   }).then(() => {
+
+  //     let favourites: string [] = [];
+  //     this.db.executeSql('SELECT guidId FROM Category WHERE isFavourite = 1', {}).then((data) => { 
+  //       if (data.rows.length > 0) {
+  //         for (var i = 0; i < data.rows.length; i++) {
+  //           favourites.push(data.rows.item(i).guidId);
+  //         }
+  //       }
+  //     }, (err) => { });
+
+
+  //     this.db.executeSql('DELETE FROM Category', {}).then((data) => {} , (err) => {
+  //       callbackMethod({success: false, data: err}); 
+  //       return;
+  //     });
+
+  //     for(var index = 0; index < budgetSetupModels.length; index++){
+  //       let categoryModel = budgetSetupModels[index];  
+
+  //       let isFav = 0;
+  //       favourites.forEach(favourite => {
+  //         if(favourite === categoryModel.guidId){
+  //           isFav = 1;
+  //         }
+  //       });
+        
+        
+  //       this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, isFavourite, inSync) VALUES (?, ?, ?, ?, ?)'
+  //       , [
+  //           categoryModel.guidId, 
+  //           categoryModel.categoryName, 
+  //           categoryModel.budget,
+  //           isFav,
+  //           1
+  //         ]).then((data) => {
+  //           //callbackMethod({success: true, data: data});
+  //         }, (err) => {
+  //           callbackMethod({success: false, data: err});
+  //           return;
+  //         });
+
+  //     }
+  //     callbackMethod({success: true, data: 'OK'});
+  //   }, (err) => {
+  //     callbackMethod({success: false, data: err});
+  //   });
+  // }
+
+  syncTable(budgetSetupModels: CategoryModel[], callbackMethod) {
     this.db.openDatabase({
       name: 'data.db',
       location: 'default' // the location field is required
     }).then(() => {
 
-      let favourites: string [] = [];
-      this.db.executeSql('SELECT guidId FROM Category WHERE isFavourite = 1', {}).then((data) => { 
+      let favourites: string[] = [];
+      this.db.executeSql('SELECT guidId FROM Category WHERE isFavourite = 1', {}).then((data) => {
         if (data.rows.length > 0) {
           for (var i = 0; i < data.rows.length; i++) {
-            favourites.push(data.rows.item(i).guidId)
+            favourites.push(data.rows.item(i).guidId);
           }
         }
-      }, (err) => { });
+        
+        this.db.executeSql('DELETE FROM Category', {}).then((data) => { 
+
+          for (var index = 0; index < budgetSetupModels.length; index++) {
+            let categoryModel = budgetSetupModels[index];
+
+            let isFav = 0;
+            favourites.forEach(favourite => {
+              if (favourite === categoryModel.guidId) {
+                isFav = 1;
+              }
+            });
 
 
-      this.db.executeSql('DELETE FROM Category', {}).then((data) => {} , (err) => {
-        callbackMethod({success: false, data: err}); 
-        return;
-      });
+            this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, isFavourite, inSync) VALUES (?, ?, ?, ?, ?)'
+              , [
+                categoryModel.guidId,
+                categoryModel.categoryName,
+                categoryModel.budget,
+                isFav,
+                1
+              ]).then((data) => {
+                //callbackMethod({success: true, data: data});
+              }, (err) => {
+                callbackMethod({ success: false, data: err });
+                return;
+              });
 
-      for(var index = 0; index < budgetSetupModels.length; index++){
-        let categoryModel = budgetSetupModels[index];  
-
-        let isFav = 0;
-        favourites.forEach(favourite => {
-          if(favourite === categoryModel.guidId){
-            isFav = 1;
           }
-        });
-        
-        
-        this.db.executeSql('INSERT INTO Category (guidId, categoryName, budget, isFavourite, inSync) VALUES (?, ?, ?, ?, ?)'
-        , [
-            categoryModel.guidId, 
-            categoryModel.categoryName, 
-            categoryModel.budget,
-            isFav,
-            1
-          ]).then((data) => {
-            //callbackMethod({success: true, data: data});
-          }, (err) => {
-            callbackMethod({success: false, data: err});
-            return;
-          });
+          callbackMethod({ success: true, data: 'OK' });
 
-      }
-      callbackMethod({success: true, data: 'OK'});
+        }, (err) => {
+          callbackMethod({ success: false, data: err });
+          return;
+        });
+
+
+
+      }, (err) => { }); // End if getFavourites
+
+
+     
+
     }, (err) => {
-      callbackMethod({success: false, data: err});
+      callbackMethod({ success: false, data: err });
     });
   }
+  
+
 
   getAllNonSyncedRecords(callbackMethod){
     let result: CategoryModel[] = [];

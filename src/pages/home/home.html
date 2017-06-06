@@ -70,9 +70,12 @@
 
 
 <ion-footer>
-  <button ion-buttons ion-item [disabled]='disableSaveButton()' (click)="saveClick()">
-    <div class="item-note" item-right>
+  <ion-toolbar>
+    <ion-buttons right>
+      <button ion-button icon-right [disabled]='disableSaveButton()' (click)="saveClick()">
         Save
-      </div>
-  </button>
+        <ion-icon name="arrow-dropright"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-footer>
