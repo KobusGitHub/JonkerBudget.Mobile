@@ -8,7 +8,7 @@
   <ion-content>
     <ion-list>
       <button menuClose ion-item icon-left  (click)="navigatePage(homePage)">
-        <ion-icon ios="ios-home-outline" md="ios-home-outline"></ion-icon>
+        <ion-icon ios="ios-card" md="ios-card"></ion-icon>
           Expenses
       </button>
       
@@ -40,16 +40,20 @@
       </button>-->
 
 
+    <ion-item icon-left >
+        <ion-label>Advanced Options</ion-label>
+        <ion-checkbox color="secondary" style="margin-right:7px;" [(ngModel)]="showAdvancedOptions"></ion-checkbox>
+    </ion-item>
 
-      <ion-item-divider light style="background-color: #A6A6A6; color: white">Dev</ion-item-divider>
-      <button menuClose ion-item icon-left  (click)="navigatePage(sqlitePage)">
-          <ion-icon ios="ios-construct-outline" md="ios-construct-outline"></ion-icon>
-              SQlite
-      </button>
+    <ion-item-divider light *ngIf="showAdvancedOptions" style="background-color: #A6A6A6; color: white">Advanced Options</ion-item-divider>
+    <button *ngIf="showAdvancedOptions" menuClose ion-item icon-left  (click)="navigatePage(sqlitePage)">
+        <ion-icon ios="ios-construct-outline" md="ios-construct-outline"></ion-icon>
+            SQlite
+    </button>
       
-      <ion-item icon-left>
-        <ion-label>Use API</ion-label>
-        <ion-checkbox color="secondary" [(ngModel)]="useAPI" (click)="useApiChange()"></ion-checkbox>
+    <ion-item *ngIf="showAdvancedOptions && !offlineOnly" icon-left >
+        <ion-label>Use Online</ion-label>
+        <ion-checkbox color="secondary" style="margin-right:7px;" [(ngModel)]="useAPI" (click)="useApiChange()"></ion-checkbox>
     </ion-item>
       
 

@@ -11,10 +11,10 @@ import { SetupPage } from '../../shared/shared-pages'
 export class BudgetListPage {
   loader: any;
   items: any[];
+  haveCategories: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private databaseProvider: DatabaseSqlServiceProvider, public loading: LoadingController,
-    private toast: ToastProvider, public events: Events) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, private databaseProvider: DatabaseSqlServiceProvider, public loading: LoadingController, private toast: ToastProvider, public events: Events) {
+    this.haveCategories = false;
     events.subscribe('DataUpdated', (time) => {
       this.loadBudget();
     });
@@ -49,6 +49,12 @@ export class BudgetListPage {
       }
       
       this.items = result.data;
+
+      if(this.items.length > 0){
+        this.haveCategories = true;
+      } else {
+        this.haveCategories = false;
+      }
   }
 
   editClick(event, item) {

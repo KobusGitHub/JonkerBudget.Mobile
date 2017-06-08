@@ -24,6 +24,8 @@ export class MyApp {
   rootPage: any = TempPage;
 
   private useAPI: boolean = false;
+  private offlineOnly: boolean = false;
+  private showAdvancedOptions: boolean = false;
 
   private homePage;
   private sqlitePage;
@@ -48,12 +50,14 @@ export class MyApp {
     private toast: ToastProvider) {
     this.initializeApp();
     
+    this.showAdvancedOptions = false;
+
     localStorage.setItem('browserMode', 'false');  
     
         
     if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
     {
-        localStorage.setItem('useAPI', 'false'); 
+        localStorage.setItem('useAPI', 'true'); 
     }
 
     if (localStorage.getItem("useAPI") === 'true'){
@@ -62,6 +66,16 @@ export class MyApp {
         this.useAPI = false;
     }
     
+
+    if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
+        localStorage.setItem('offlineOnly', 'false');
+    }
+
+    if (localStorage.getItem("offlineOnly") === 'true') {
+        this.offlineOnly = true;
+    } else {
+        this.offlineOnly = false;
+    }
 
 
 
@@ -167,7 +181,7 @@ export class MyApp {
             this.toast.showToast('Initialised users table successfully');
             if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
                 this.loader.dismiss();
-                this.nav.setRoot(HomePage);
+                this.nav.setRoot(BudgetListPage);
             }
             return;
         }
@@ -177,7 +191,7 @@ export class MyApp {
 
         if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
             this.loader.dismiss();
-            this.nav.setRoot(HomePage);
+            this.nav.setRoot(BudgetListPage);
         }
     }
 
@@ -187,7 +201,7 @@ export class MyApp {
             this.toast.showToast('Initialised Budet Setup table successfully');
             if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
                 this.loader.dismiss();
-                this.nav.setRoot(HomePage);
+                this.nav.setRoot(BudgetListPage);
             }
             return;
         }
@@ -197,7 +211,7 @@ export class MyApp {
 
         if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
             this.loader.dismiss();
-            this.nav.setRoot(HomePage);
+            this.nav.setRoot(BudgetListPage);
         }
     }
 
@@ -207,7 +221,7 @@ export class MyApp {
             this.toast.showToast('Initialised Expense table successfully');
             if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
                 this.loader.dismiss();
-                this.nav.setRoot(HomePage);
+                this.nav.setRoot(BudgetListPage);
             }
             return;
         }
@@ -217,7 +231,7 @@ export class MyApp {
 
         if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
             this.loader.dismiss();
-            this.nav.setRoot(HomePage);
+            this.nav.setRoot(BudgetListPage);
         }
     }
 
@@ -227,7 +241,7 @@ export class MyApp {
             this.toast.showToast('Insert users successfully');
             if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
                 this.loader.dismiss();
-                this.nav.setRoot(HomePage);
+                this.nav.setRoot(BudgetListPage);
             }
             return;
         }
@@ -236,7 +250,7 @@ export class MyApp {
         alert(JSON.stringify(result.data));
         if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
             this.loader.dismiss();
-            this.nav.setRoot(HomePage);
+            this.nav.setRoot(BudgetListPage);
         }
     }
   

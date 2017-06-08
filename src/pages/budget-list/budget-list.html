@@ -5,7 +5,8 @@
 
 
 <ion-content padding>
-  <ion-list>
+  <div *ngIf="!haveCategories" style="color: lightgray"><b >No category budget. Please add at least one category.</b></div>
+  <ion-list *ngIf="haveCategories">
     <button ion-item *ngFor="let item of items" (click)="editClick($event, item)">
       <div class="item-note" item-left>
         <ion-icon *ngIf="item.isFavourite" ios="ios-star" md="ios-star" style="font-size: 30px; color: Red; margin-right: 10px;"></ion-icon>
