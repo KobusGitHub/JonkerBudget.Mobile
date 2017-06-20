@@ -14,6 +14,7 @@ export class HomePage {
   loader: any;
   categories: CategoryModel[] = [];
   isTransferExpense: boolean = false;
+  isNegativeExpense: boolean = false;
   transferToGuidId = '';
 
   useAPI: boolean = false;        
@@ -46,6 +47,33 @@ export class HomePage {
    ionViewDidLoad() {
     this.loadData();
   }
+
+  canExpenseBeNegative(){
+    if(this.isTransferExpense){
+      this.isNegativeExpense = false;
+      return false;
+    }
+
+    if (this.formData.expenseValue === ''){
+      this.isNegativeExpense = false;
+      return false;
+    }
+
+    return true;
+  }
+
+  isTransferClick(isTransfer){
+    if(isTransfer){
+      this.isNegativeExpenseClicked(false);
+    }
+  }
+   isNegativeExpenseClicked(isNegative){
+     if(isNegative){
+      this.formData.expenseValue = '-' + this.formData.expenseValue
+     } else {
+       this.formData.expenseValue = this.formData.expenseValue.replace('-', '');
+     }
+   }
 
   getCategoryPlaceholder(){
     if(this.isTransferExpense){
@@ -184,8 +212,8 @@ export class HomePage {
   };
 
   disableSaveButton(){
-    if(this.formData.categoryGuidId === undefined || this.formData.categoryGuidId === null || this.formData.categoryGuidId === 0 ||
-    this.formData.expenseValue === undefined || this.formData.expenseValue === null ||this.formData.expenseValue < 1){
+    if (this.formData.categoryGuidId === undefined || this.formData.categoryGuidId === null || this.formData.categoryGuidId === 0 || this.formData.categoryGuidId === '' ||
+    this.formData.expenseValue === undefined || this.formData.expenseValue === null ||this.formData.expenseValue === 0){
       return true; 
     }
 

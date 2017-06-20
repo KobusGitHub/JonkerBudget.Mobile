@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, LoadingController, Events } from 'ionic-angular';
+import { Nav, Platform, LoadingController, Events, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -20,6 +20,7 @@ import { SqliteCallbackModel } from '../shared/shared-models';
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
+  showedExitAlert = false;
 
   rootPage: any = TempPage;
 
@@ -43,7 +44,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
+  constructor(public alert: AlertController, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
     private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
     public loading: LoadingController,
     public events: Events,
@@ -54,10 +55,9 @@ export class MyApp {
 
     localStorage.setItem('browserMode', 'false');  
     
-        
     if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
     {
-        localStorage.setItem('useAPI', 'true'); 
+        localStorage.setItem('useAPI', 'false'); 
     }
 
     if (localStorage.getItem("useAPI") === 'true'){
@@ -65,10 +65,9 @@ export class MyApp {
     } else {
         this.useAPI = false;
     }
-    
 
     if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
-        localStorage.setItem('offlineOnly', 'false');
+        localStorage.setItem('offlineOnly', 'true');
     }
 
     if (localStorage.getItem("offlineOnly") === 'true') {
@@ -76,10 +75,6 @@ export class MyApp {
     } else {
         this.offlineOnly = false;
     }
-
-
-
-
 
     if(localStorage.getItem('budgetYear') === undefined ||  localStorage.getItem('budgetYear') === null){
         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -96,6 +91,45 @@ export class MyApp {
     this.reportPage = ReportPage;
     this.syncPage = SyncPage;
     this.netReportPage = NetReportPage;
+
+    this.platform.registerBackButtonAction(() => {
+        if (this.nav.length() == 1) {
+            if (!this.showedExitAlert) {
+                this.confirmExitApp();
+            } else {
+                this.showedExitAlert = false;
+            }
+        }
+
+        this.nav.pop();
+    });
+
+  }
+
+  confirmExitApp() {
+      this.showedExitAlert = true;
+      let alert = this.alert.create({
+          title: 'Confirm',
+          message: 'Do you want to exit?',
+          buttons: [{
+              text: "Cancel",
+              role: 'cancel',
+              handler: () => {
+                  this.showedExitAlert = false;
+              }
+
+          }, {
+              text: "exit",
+              handler: () => {
+                  this.showedExitAlert = false;
+                  this.exitApp();
+              }
+          }]
+      })
+      alert.present();
+  }
+  exitApp() {
+      this.platform.exitApp();
   }
 
   useApiChange(){
