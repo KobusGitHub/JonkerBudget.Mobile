@@ -38,7 +38,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, year NUMERIC, month TEXT, categoryGuidId TEXT, expenseValue NUMERIC, recordDate TEXT, expenseCode TEXT, inSync NUMERIC)', {}).then((data) => {
+      this.db.executeSql('CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, year NUMERIC, month TEXT, categoryGuidId TEXT, expenseValue NUMERIC, recordDate TEXT, expenseCode TEXT, comment TEXT, inSync NUMERIC)', {}).then((data) => {
         callbackMethod({success: true, data: data.rows.item(0)});
       }, (err) => {
         callbackMethod({success: false, data: err});
@@ -55,7 +55,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       location: 'default' // the location field is required
     }).then(() => {
 
-      this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, comment, inSync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
       , [
           expenseModel.year,
           expenseModel.month,
@@ -63,6 +63,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
           expenseModel.expenseValue, 
           expenseModel.recordDate,
           expenseModel.expenseCode, 
+          expenseModel.comment,
           this.boolToNum(expenseModel.inSync)
         ]).then((data) => {
         callbackMethod({success: true, data: data});
@@ -82,7 +83,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
     }).then(() => {
         // WORK
 
-        let sql = "UPDATE Expense SET year = " + expenseModel.year + ", month = '" + expenseModel.month + "', categoryGuidId = '" + expenseModel.categoryGuidId + "', expenseValue = " + expenseModel.expenseValue + ", recordDate = '" + expenseModel.recordDate + "', expenseCode = '" + expenseModel.expenseCode + "', inSync = " + this.boolToNum(expenseModel.inSync) + " WHERE id = " + expenseModel.id;
+      let sql = "UPDATE Expense SET year = " + expenseModel.year + ", month = '" + expenseModel.month + "', categoryGuidId = '" + expenseModel.categoryGuidId + "', expenseValue = " + expenseModel.expenseValue + ", recordDate = '" + expenseModel.recordDate + "', expenseCode = '" + expenseModel.expenseCode + "', comment = '" + expenseModel.comment + "', inSync = " + this.boolToNum(expenseModel.inSync) + " WHERE id = " + expenseModel.id;
         this.db.executeSql(sql, {}).then((data) => {
           callbackMethod({success: true, data: data});
         }, (err) => {
@@ -113,6 +114,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: data.rows.item(i).recordDate,
                   expenseCode: data.rows.item(i).expenseCode,
+                  comment: data.rows.item(i).comment,
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 };
             }
@@ -148,6 +150,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: data.rows.item(i).recordDate,
                   expenseCode: data.rows.item(i).expenseCode,
+                  comment: data.rows.item(i).comment,
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 });
             }
@@ -182,6 +185,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: data.rows.item(i).recordDate,
                   expenseCode: data.rows.item(i).expenseCode,
+                  comment: data.rows.item(i).comment,
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 });
             }
@@ -228,7 +232,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       for(var index = 0; index < expenseModels.length; index++){
         let budgetSetupModel = expenseModels[index];  
 
-        this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, inSync) VALUES (?, ?, ?, ?, ?, ?, ?)'
+        this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, comment, inSync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         , [
             budgetSetupModel.year, 
             budgetSetupModel.month,
@@ -236,6 +240,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
             budgetSetupModel.expenseValue,
             budgetSetupModel.recordDate,
             budgetSetupModel.expenseCode,
+            budgetSetupModel.comment,
             1
           ]).then((data) => {
             //callbackMethod({success: true, data: data});
@@ -271,6 +276,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
                   expenseValue: data.rows.item(i).expenseValue,
                   recordDate: new Date(data.rows.item(i).recordDate),
                   expenseCode: data.rows.item(i).expenseCode,
+                  comment: data.rows.item(i).comment,
                   inSync: this.numToBool(data.rows.item(i).inSync),
                 });
             }

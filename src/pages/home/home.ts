@@ -89,6 +89,7 @@ export class HomePage {
     this.formData.categoryGuidId = '';
     this.formData.expenseValue = '';
     this.formData.expenseCode = '';
+    this.formData.comment = '';
     this.formData.inSync = false;
   }
 
@@ -125,6 +126,7 @@ export class HomePage {
         month: localStorage.getItem('budgetMonth'),
         categoryGuidId: this.formData.categoryGuidId,
         expenseValue: this.formData.expenseValue,
+        comment: this.formData.comment,
         recordDate: new Date().toString(),
         expenseCode: this.getNewExpenseCode(),
         inSync: false
@@ -138,6 +140,7 @@ export class HomePage {
         month: localStorage.getItem('budgetMonth'),
         categoryGuidId: this.formData.categoryGuidId,
         expenseValue: eValue,
+        comment: this.formData.comment,
         recordDate: new Date().toString(),
         expenseCode: this.getNewExpenseCode(),
         inSync: false
@@ -168,6 +171,7 @@ export class HomePage {
           month: sqlModel.month,
           categoryGuidId: sqlModel.categoryGuidId,
           expenseValue: sqlModel.expenseValue,
+          comment: this.formData.comment,
           recordDate: new Date(),
           expenseCode: sqlModel.expenseCode,
           inSync: sqlModel.inSync
@@ -254,6 +258,7 @@ export class HomePage {
       month: localStorage.getItem('budgetMonth'),
       categoryGuidId: this.transferToGuidId,
       expenseValue: this.formData.expenseValue,
+      comment: this.formData.comment,
       recordDate: new Date().toString(),
       expenseCode: this.getNewExpenseCode(),
       inSync: false

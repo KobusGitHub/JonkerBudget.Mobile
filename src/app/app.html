@@ -56,6 +56,9 @@
         <ion-checkbox color="secondary" style="margin-right:7px;" [(ngModel)]="useAPI" (click)="useApiChange()"></ion-checkbox>
     </ion-item>
       
+    <ion-item *ngIf="showAdvancedOptions && !offlineOnly">
+        Service Pack: {{servicePackValue}}
+    </ion-item>
 
     </ion-list>
   </ion-content>

@@ -6,6 +6,7 @@ export class ExpenseApiModel {
   month: string;
   recordDate: Date;
   expenseCode: string;
+  comment: string;
   inSync: boolean;
 
 

@@ -8,6 +8,8 @@ export * from '../providers/expense-sql-service-provider';
 export * from '../providers/mock-expense-sql-service-provider';
 export * from '../providers/expense-api-service-provider';
 export * from '../providers/category-api-service-provider';
+export * from '../providers/service-pack-provider';
+export * from '../providers/callback-manager-service-provider';
 
 export * from '../providers/database-service-provider'
 export * from '../providers/sync-service-provider';

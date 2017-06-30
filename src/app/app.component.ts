@@ -7,7 +7,7 @@ import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPag
 import { DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
     CategorySqlServiceProvider, MockCategorySqlServiceProvider, 
     ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-    SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider } from '../shared/shared-providers'
+    SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider, ServicePackProvider, CallbackMangerServiceProvider } from '../shared/shared-providers'
 
 import { SqliteCallbackModel } from '../shared/shared-models';
 
@@ -16,180 +16,200 @@ import { SqliteCallbackModel } from '../shared/shared-models';
   providers: [DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider, 
             CategorySqlServiceProvider, MockCategorySqlServiceProvider,
             ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
-      SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider]
+      SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider, ServicePackProvider]
 })
 export class MyApp {
-  @ViewChild(Nav) nav: Nav;
-  showedExitAlert = false;
+    @ViewChild(Nav) nav: Nav;
+    showedExitAlert = false;
 
-  rootPage: any = TempPage;
+    rootPage: any = TempPage;
 
-  private useAPI: boolean = false;
-  private offlineOnly: boolean = false;
-  private showAdvancedOptions: boolean = false;
+    private servicePackValue: string = '';
+    private useAPI: boolean = false;
+    private offlineOnly: boolean = false;
+    private showAdvancedOptions: boolean = false;
 
-  private homePage;
-  private sqlitePage;
-  private budgetListPage;
-  private setMonthPage;
-  private reportPage; 
-  private syncPage;
-  private netReportPage;
+    private homePage;
+    private sqlitePage;
+    private budgetListPage;
+    private setMonthPage;
+    private reportPage; 
+    private syncPage;
+    private netReportPage;
 
-  loader: any;
-  usersInit: boolean = false;
-  budgetSetupInit: boolean = false;
-  recordsCreated: boolean = false;
-  expenseInit: boolean = false;
 
-  pages: Array<{title: string, component: any}>;
+    callbackManager: CallbackMangerServiceProvider;
+    loader: any;
 
-  constructor(public alert: AlertController, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
-    private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
-    public loading: LoadingController,
-    public events: Events,
-    private toast: ToastProvider) {
-    this.initializeApp();
-    
-    this.showAdvancedOptions = false;
+    pages: Array<{title: string, component: any}>;
 
-    localStorage.setItem('browserMode', 'false');  
-    
-    if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
-    {
-        localStorage.setItem('useAPI', 'false'); 
-    }
+    constructor(public alert: AlertController, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
+        private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
+        public loading: LoadingController,
+        public events: Events,
+        private toast: ToastProvider,
+        private servicePack: ServicePackProvider) {
+        this.initializeApp();
+        
+        
+        this.showAdvancedOptions = false;
 
-    if (localStorage.getItem("useAPI") === 'true'){
-        this.useAPI = true;
-    } else {
-        this.useAPI = false;
-    }
+        localStorage.setItem('browserMode', 'false');  
+        
 
-    if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
-        localStorage.setItem('offlineOnly', 'true');
-    }
+        if (localStorage.getItem("ServicePack") === undefined || localStorage.getItem("ServicePack") === null) {
+            localStorage.setItem('ServicePack', '1');
+        }
+        this.servicePackValue = localStorage.getItem("ServicePack");
 
-    if (localStorage.getItem("offlineOnly") === 'true') {
-        this.offlineOnly = true;
-    } else {
-        this.offlineOnly = false;
-    }
-
-    if(localStorage.getItem('budgetYear') === undefined ||  localStorage.getItem('budgetYear') === null){
-        let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        let dt = new Date();
-
-        localStorage.setItem('budgetYear', dt.getFullYear().toString());
-        localStorage.setItem('budgetMonth', monthNames[dt.getMonth()]);    
-    }
-
-    this.homePage = HomePage;
-    this.sqlitePage = SqlitePage;
-    this.budgetListPage = BudgetListPage;
-    this.setMonthPage = SetMonthPage;
-    this.reportPage = ReportPage;
-    this.syncPage = SyncPage;
-    this.netReportPage = NetReportPage;
-
-    this.platform.registerBackButtonAction(() => {
-        if (this.nav.length() == 1) {
-            if (!this.showedExitAlert) {
-                this.confirmExitApp();
-            } else {
-                this.showedExitAlert = false;
-            }
+        if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
+        {
+            localStorage.setItem('useAPI', 'true'); 
         }
 
-        this.nav.pop();
-    });
+        if (localStorage.getItem("useAPI") === 'true'){
+            this.useAPI = true;
+        } else {
+            this.useAPI = false;
+        }
 
-  }
+        if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
+            localStorage.setItem('offlineOnly', 'false');
+        }
 
-  confirmExitApp() {
-      this.showedExitAlert = true;
-      let alert = this.alert.create({
-          title: 'Confirm',
-          message: 'Do you want to exit?',
-          buttons: [{
-              text: "Cancel",
-              role: 'cancel',
-              handler: () => {
-                  this.showedExitAlert = false;
-              }
+        if (localStorage.getItem("offlineOnly") === 'true') {
+            this.offlineOnly = true;
+        } else {
+            this.offlineOnly = false;
+        }
 
-          }, {
-              text: "exit",
-              handler: () => {
-                  this.showedExitAlert = false;
-                  this.exitApp();
-              }
-          }]
-      })
-      alert.present();
-  }
-  exitApp() {
-      this.platform.exitApp();
-  }
+        if(localStorage.getItem('budgetYear') === undefined ||  localStorage.getItem('budgetYear') === null){
+            let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            let dt = new Date();
 
-  useApiChange(){
-      
-      if (this.useAPI === true) {
-          localStorage.setItem('useAPI', 'true');
-      } else {
-          localStorage.setItem('useAPI', 'false');
-      }
-      this.events.publish('UseApiChanged', Date.now());
-  }
+            localStorage.setItem('budgetYear', dt.getFullYear().toString());
+            localStorage.setItem('budgetMonth', monthNames[dt.getMonth()]);    
+        }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
-  }
+        this.homePage = HomePage;
+        this.sqlitePage = SqlitePage;
+        this.budgetListPage = BudgetListPage;
+        this.setMonthPage = SetMonthPage;
+        this.reportPage = ReportPage;
+        this.syncPage = SyncPage;
+        this.netReportPage = NetReportPage;
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  }
+        this.platform.registerBackButtonAction(() => {
+            if (this.nav.length() == 1) {
+                if (!this.showedExitAlert) {
+                    this.confirmExitApp();
+                } else {
+                    this.showedExitAlert = false;
+                }
+            }
 
-  navigatePage(p){
-    this.nav.setRoot(p)
-  }
+            this.nav.pop();
+        });
+
+    }
+
+    confirmExitApp() {
+        this.showedExitAlert = true;
+        let alert = this.alert.create({
+            title: 'Confirm',
+            message: 'Do you want to exit?',
+            buttons: [{
+                text: "Cancel",
+                role: 'cancel',
+                handler: () => {
+                    this.showedExitAlert = false;
+                }
+
+            }, {
+                text: "exit",
+                handler: () => {
+                    this.showedExitAlert = false;
+                    this.exitApp();
+                }
+            }]
+        })
+        alert.present();
+    }
+    exitApp() {
+        this.platform.exitApp();
+    }
+
+    useApiChange(){
+        
+        if (this.useAPI === true) {
+            localStorage.setItem('useAPI', 'true');
+        } else {
+            localStorage.setItem('useAPI', 'false');
+        }
+        this.events.publish('UseApiChanged', Date.now());
+    }
+
+    initializeApp() {
+        this.platform.ready().then(() => {
+        // Okay, so the platform is ready and our plugins are available.
+        // Here you can do any higher level native things you might need.
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+        });
+    }
+
+    openPage(page) {
+        // Reset the content nav to have just this page
+        // we wouldn't want the back button to show in this scenario
+        this.nav.setRoot(page.component);
+    }
+
+    navigatePage(p){
+        this.nav.setRoot(p)
+    }
 
 
-  ngAfterViewInit() {
+    ngAfterViewInit() {
+
+        this.callbackManager = new CallbackMangerServiceProvider();
+        this.callbackManager.add('doesTableExistCallback');
         this.loader = this.loading.create({ 
             content: 'Checking Database, please wait...', 
         }); 
         this.loader.present().then(() => {
-          this.databaseSqlServiceProvider.userDbProvider.doesTableExist(e => this.doesTableExistCallback(e)); 
+            this.databaseSqlServiceProvider.userDbProvider.doesTableExist(e => this.doesTableExistCallback(e)); 
         });
-  }
+    }
 
-  doesTableExistCallback(result: SqliteCallbackModel){
-      this.loader.dismiss();
-      if(result.success && !result.data) {
-          alert('Building Database');
-          this.loader = this.loading.create({
-              content: 'Checking system, please wait...',
-          });
-          this.loader.present().then(() => {
-              this.usersInit = false;
-              this.recordsCreated = false;
-              this.buildDatabase();
-          });
-      } else {
-          this.nav.setRoot(HomePage);
-      }
-      
-  }
+    doesTableExistCallback(result: SqliteCallbackModel){
+        
+        if(result.success && !result.data) {
+            this.loader.setContent('Checking system, please wait...');
+            this.buildDatabase();
+            this.callbackManager.removeCheckDismiss('doesTableExistCallback', this.loader);
+            
+        } else {
+            this.callbackManager.add('checkServicePackCallback');
+            this.callbackManager.removeCheckDismiss('doesTableExistCallback',this.loader);
+            this.loader.setContent('Installing service packs, please wait...');
+            this.servicePack.checkServicePack(e => this.checkServicePackCallback(e));
+        }
+    }
+
+    checkServicePackCallback(result: SqliteCallbackModel) {
+        this.callbackManager.removeCheckDismiss('checkServicePackCallback', this.loader);
+        if(result.success === false){
+            alert(result.data);
+        }
+        this.nav.setRoot(HomePage);
+    }
 
     buildDatabase() {
+        this.callbackManager.add('initialiseUserTableCallback');
+        this.callbackManager.add('initialiseBudgetSetupTableCallback');
+        this.callbackManager.add('initialiseExpenseTableCallback');
+        this.callbackManager.add('insertUserCallback');
+        
         this.databaseSqlServiceProvider.userDbProvider.initialiseTable(e => this.initialiseUserTableCallback(e));
         this.databaseSqlServiceProvider.categoryDbProvider.initialiseTable(e => this.initialiseBudgetSetupTableCallback(e));
         this.databaseSqlServiceProvider.expenseDbProvider.initialiseTable(e => this.initialiseExpenseTableCallback(e));
@@ -206,15 +226,10 @@ export class MyApp {
             inSync: false
         }, e => this.insertUserCallback(e));
     }
-
     
-   
     initialiseUserTableCallback(result: SqliteCallbackModel){
-        this.usersInit = true;
         if(result.success) {
-            this.toast.showToast('Initialised users table successfully');
-            if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-                this.loader.dismiss();
+            if (this.callbackManager.removeCheckDismiss('initialiseUserTableCallback', this.loader) === true){
                 this.nav.setRoot(BudgetListPage);
             }
             return;
@@ -223,18 +238,14 @@ export class MyApp {
         this.toast.showToast('Error');
         alert(JSON.stringify(result.data));
 
-        if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-            this.loader.dismiss();
+        if (this.callbackManager.removeCheckDismiss('initialiseUserTableCallback', this.loader) === true) {
             this.nav.setRoot(BudgetListPage);
         }
     }
 
     initialiseBudgetSetupTableCallback(result: SqliteCallbackModel){
-        this.budgetSetupInit = true;
         if(result.success) {
-            this.toast.showToast('Initialised Budet Setup table successfully');
-            if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-                this.loader.dismiss();
+            if (this.callbackManager.removeCheckDismiss('initialiseBudgetSetupTableCallback', this.loader) === true) {
                 this.nav.setRoot(BudgetListPage);
             }
             return;
@@ -243,18 +254,14 @@ export class MyApp {
         this.toast.showToast('Error');
         alert(JSON.stringify(result.data));
 
-        if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-            this.loader.dismiss();
+        if (this.callbackManager.removeCheckDismiss('initialiseBudgetSetupTableCallback', this.loader) === true) {
             this.nav.setRoot(BudgetListPage);
         }
     }
 
     initialiseExpenseTableCallback(result: SqliteCallbackModel){
-        this.expenseInit = true;
         if(result.success) {
-            this.toast.showToast('Initialised Expense table successfully');
-            if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-                this.loader.dismiss();
+            if (this.callbackManager.removeCheckDismiss('initialiseExpenseTableCallback', this.loader) === true) {
                 this.nav.setRoot(BudgetListPage);
             }
             return;
@@ -263,18 +270,14 @@ export class MyApp {
         this.toast.showToast('Error');
         alert(JSON.stringify(result.data));
 
-        if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-            this.loader.dismiss();
+        if (this.callbackManager.removeCheckDismiss('initialiseExpenseTableCallback', this.loader) === true) {
             this.nav.setRoot(BudgetListPage);
         }
     }
 
-     insertUserCallback(result: SqliteCallbackModel){
-        this.recordsCreated = true;
+    insertUserCallback(result: SqliteCallbackModel){
         if(result.success) {
-            this.toast.showToast('Insert users successfully');
-            if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-                this.loader.dismiss();
+            if (this.callbackManager.removeCheckDismiss('insertUserCallback', this.loader) === true) {
                 this.nav.setRoot(BudgetListPage);
             }
             return;
@@ -282,10 +285,9 @@ export class MyApp {
         console.log(result.data);
         this.toast.showToast('Error');
         alert(JSON.stringify(result.data));
-        if(this.usersInit && this.budgetSetupInit && this.expenseInit && this.recordsCreated) {
-            this.loader.dismiss();
+        if (this.callbackManager.removeCheckDismiss('insertUserCallback', this.loader) === true) {
             this.nav.setRoot(BudgetListPage);
         }
     }
-  
+
 }

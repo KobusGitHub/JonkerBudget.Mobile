@@ -80,6 +80,14 @@
       <ion-checkbox [disabled]="!canExpenseBeNegative()" color="danger" style="margin-right: 4px;" [(ngModel)]="isNegativeExpense" (click)="isNegativeExpenseClicked(isNegativeExpense)"></ion-checkbox>
     </ion-item>
 
+    <ion-item style="width: 100%; border-width: 0px;">
+      Comment
+    </ion-item>
+    <ion-item style="width: 100%; border-style: solid; border-width: 1px; border-radius: 10px; border-color: lightgray ">
+      <ion-input type="text" maxlength="255" [(ngModel)]='formData.comment'></ion-input>
+    </ion-item>
+
+    
   </ion-card-content>
 </ion-card>
 

@@ -6,6 +6,7 @@ export class ExpenseModel {
   month: string;
   recordDate: string;
   expenseCode: string;
+  comment: string;
   inSync: boolean;
 
 
