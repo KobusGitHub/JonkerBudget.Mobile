@@ -8,4 +8,4 @@ export * from '../pages/set-month/set-month';
 export * from '../pages/report/report';
 export * from '../pages/sync/sync';
 export * from '../pages/net-report/net-report';
-
+export * from '../pages/expense-detail/expense-detail'

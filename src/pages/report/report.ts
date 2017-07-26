@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { DatabaseSqlServiceProvider, ToastProvider } from '../../shared/shared-providers'
-import { SqliteCallbackModel} from '../../shared/shared-models'
+import { SqliteCallbackModel } from '../../shared/shared-models'
+import { ExpenseDetailPage } from '../../shared/shared-pages'
 import { LoadingController } from 'ionic-angular';
 
 @Component({
@@ -68,14 +69,17 @@ export class ReportPage {
         });
 
         this.records.push({
+          expenseId: rec.id,
           category: catName,
           expenseValue: rec.expenseValue
         })
       });
-
-     
     }
+  }
 
+  detailClick(event, item) {
+    let obj = { expenseId: item.expenseId };
+    this.navCtrl.push(ExpenseDetailPage, obj);
   }
 
 }

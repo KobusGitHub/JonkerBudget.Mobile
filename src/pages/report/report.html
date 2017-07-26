@@ -46,7 +46,7 @@
               <b>Expence Value</b>
             </ion-col>
           </ion-row>
-          <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of records">
+          <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of records" (click)="detailClick($event, record)">
             
             <ion-col>
               {{record.category}}

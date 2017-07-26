@@ -58,13 +58,13 @@ export class MyApp {
         
 
         if (localStorage.getItem("ServicePack") === undefined || localStorage.getItem("ServicePack") === null) {
-            localStorage.setItem('ServicePack', '1');
+            localStorage.setItem('ServicePack', '0');
         }
         this.servicePackValue = localStorage.getItem("ServicePack");
 
         if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
         {
-            localStorage.setItem('useAPI', 'true'); 
+            localStorage.setItem('useAPI', 'false'); 
         }
 
         if (localStorage.getItem("useAPI") === 'true'){
@@ -74,7 +74,7 @@ export class MyApp {
         }
 
         if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
-            localStorage.setItem('offlineOnly', 'false');
+            localStorage.setItem('offlineOnly', 'true');
         }
 
         if (localStorage.getItem("offlineOnly") === 'true') {
@@ -205,6 +205,7 @@ export class MyApp {
     }
 
     buildDatabase() {
+        localStorage.setItem('ServicePack', '1');
         this.callbackManager.add('initialiseUserTableCallback');
         this.callbackManager.add('initialiseBudgetSetupTableCallback');
         this.callbackManager.add('initialiseExpenseTableCallback');

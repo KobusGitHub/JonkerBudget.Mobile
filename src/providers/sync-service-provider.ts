@@ -14,6 +14,8 @@ export class SyncServiceProvider {
     callbackMethod: any;
 
     constructor(private events: Events, private loading: LoadingController, private toast: ToastProvider, private databaseSqlServiceProvider: DatabaseSqlServiceProvider, private expenseApi: ExpenseApi, private categoryApi: CategoryApi) {
+        
+        // TODO pass your and month to every method. Not in the constructor because if the user set the month then it wont pickup the change
         this.syncYear = parseInt(localStorage.getItem('budgetYear')),
             this.syncMonth = localStorage.getItem('budgetMonth')
     }

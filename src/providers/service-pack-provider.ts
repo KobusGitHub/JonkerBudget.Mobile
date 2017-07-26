@@ -39,7 +39,7 @@ export class ServicePackProvider {
             return;
         }
 
-        let sql = 'ALTER TABLE Expense ADD Comment TEXT;';
+        let sql = 'ALTER TABLE Expense ADD comment TEXT;';
         this.execute(sql, sp);
     }
 

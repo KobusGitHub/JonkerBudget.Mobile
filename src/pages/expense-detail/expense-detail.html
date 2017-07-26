@@ -1,0 +1,50 @@
+<ion-header>
+  <menu-header headerText="Expense Detail"></menu-header>
+</ion-header>
+
+<ion-content padding>
+
+<ion-grid>
+
+<ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;">
+  <ion-col>
+    <b>Date:</b>
+  </ion-col>
+  <ion-col style="text-align: right">
+    {{record.recordDate}}
+  </ion-col>
+</ion-row>
+
+<ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;">
+  <ion-col>
+    <b>Category:</b>
+  </ion-col>
+  <ion-col style="text-align: right">
+    {{record.category}}
+  </ion-col>
+</ion-row>
+
+<ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;">
+  <ion-col>
+    <b>Expense Value:</b>
+  </ion-col>
+  <ion-col style="text-align: right">
+   
+      <currency-formatter style="text-align: right" [numberToFormat]='record.expenseValue'></currency-formatter>
+    
+  </ion-col>
+</ion-row>
+
+<ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;">
+  <ion-col>
+    <b>Comment:</b>
+  </ion-col>
+  <ion-col style="text-align: right">
+    {{record.comment}}
+  </ion-col>
+</ion-row>
+
+</ion-grid>
+
+ 
+</ion-content>
