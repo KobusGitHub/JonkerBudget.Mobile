@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { DatabaseSqlServiceProvider, ToastProvider } from '../../shared/shared-providers'
-import { SqliteCallbackModel} from '../../shared/shared-models'
+import { SqliteCallbackModel } from '../../shared/shared-models'
+import { CategoryReportPage} from '../../shared/shared-pages'
 import { LoadingController } from 'ionic-angular';
+import { EmailComposer } from 'ionic-native';
 
 /**
  * Generated class for the NetReport page.
@@ -94,6 +96,40 @@ loader: any;
      
     }
 
+  }
+
+  detailClick(event, item) {
+    let obj = { 
+      catGuidId: item.guidId,
+      year: this.selectedYear,
+      month: this.selectedMonth
+     };
+    this.navCtrl.push(CategoryReportPage, obj);
+  }
+
+
+  sendMail() {
+    let messageBody = "Category,Budget,ExpenseValue<br>";
+    this.categories.forEach(categoryRec => {
+      messageBody = messageBody + categoryRec.categoryName + "," + categoryRec.budget + "," + categoryRec.expenseValue + "<br>"
+    });
+   
+    let email = {
+      to: null,
+      cc: null,
+      bcc: null,
+      attachments: null,
+      // attachments: [
+      //   'file://img/logo.png',
+      //   'res://icon.png',
+      //   'base64:icon.png//iVBORw0KGgoAAAANSUhEUg...',
+      //   'file://README.pdf'
+      // ],
+      subject: 'Home Budget - Net Report',
+      body: messageBody,
+      isHtml: true
+    };
+    EmailComposer.open(email);
   }
 
 }

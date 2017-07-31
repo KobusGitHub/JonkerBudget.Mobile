@@ -64,7 +64,7 @@ export class MyApp {
 
         if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
         {
-            localStorage.setItem('useAPI', 'false'); 
+            localStorage.setItem('useAPI', 'true'); 
         }
 
         if (localStorage.getItem("useAPI") === 'true'){
@@ -74,7 +74,7 @@ export class MyApp {
         }
 
         if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
-            localStorage.setItem('offlineOnly', 'true');
+            localStorage.setItem('offlineOnly', 'false');
         }
 
         if (localStorage.getItem("offlineOnly") === 'true') {

@@ -21,10 +21,13 @@
           </ion-select>
         </ion-item>
        
-        <ion-item>
+        <ion-item style="margin-right:0px;">
         
-          <button ion-button round style="width: 100%; height: 35px;; margin: 0px;" (click)="generateClick()">
+          <button ion-button round style="width: 80%; height: 35px; margin: 0px;" (click)="generateClick()">
             Generate Report
+          </button>
+          <button ion-button round style="width:18%; height: 35px; margin: 0px;" (click)="sendMail()">
+            <ion-icon ios="ios-mail-outline" md="ios-mail-outline" style="font-size: 20px;"></ion-icon>
           </button>
         </ion-item>
        
@@ -46,7 +49,7 @@
               <b>Expence Value</b>
             </ion-col>
           </ion-row>
-          <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of categories">
+          <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of categories" (click)="detailClick($event, record)">
             
             <ion-col>
               {{record.categoryName}}

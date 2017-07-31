@@ -1,0 +1,35 @@
+<ion-header>
+  <menu-header headerText="Category Report"></menu-header>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      Report
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+
+        <ion-row style="border-bottom: black; border-width: 1px; border-bottom-style: solid;">
+          <ion-col>
+            <b>Category</b>
+          </ion-col>
+          <ion-col style="text-align: right">
+            <b>Expence Value</b>
+          </ion-col>
+        </ion-row>
+        <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of records"
+          (click)="detailClick($event, record)">
+
+          <ion-col>
+            {{record.category}}
+          </ion-col>
+          <ion-col style="text-align: right">
+            <currency-formatter style="text-align: right" [numberToFormat]='record.expenseValue'></currency-formatter>
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
