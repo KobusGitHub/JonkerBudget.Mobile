@@ -129,6 +129,23 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
     });
   }
 
+  getSumInPeriod(year: number, month: string, callbackMethod) {
+    this.db.openDatabase({
+      name: 'data.db',
+      location: 'default' // the location field is required
+    }).then(() => {
+
+      this.db.executeSql("SELECT SUM(ExpenseValue) as sumExpense FROM Expense WHERE year=" + year + " AND month='" + month + "'", []).then((data) => {
+       
+        callbackMethod({ success: true, data: data.rows.item(0).sumExpense });
+      }, (err) => {
+        callbackMethod({ success: false, data: err });
+      });
+
+    }, (err) => {
+      callbackMethod({ success: false, data: err });
+    });
+  }
 
   getAllInPeriod(year:number, month:string, callbackMethod) {
     let result: ExpenseModel[] = [];

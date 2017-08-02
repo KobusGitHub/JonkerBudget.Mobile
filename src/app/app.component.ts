@@ -52,9 +52,14 @@ export class MyApp {
         this.initializeApp();
         
         
+        let browserModeSetting = 'false';
+        let useAPISetting = 'false';
+        let offlineOnlySetting = 'true';
+
+
         this.showAdvancedOptions = false;
 
-        localStorage.setItem('browserMode', 'false');  
+        localStorage.setItem('browserMode', browserModeSetting);  
         
 
         if (localStorage.getItem("ServicePack") === undefined || localStorage.getItem("ServicePack") === null) {
@@ -64,7 +69,7 @@ export class MyApp {
 
         if (localStorage.getItem("useAPI") === undefined || localStorage.getItem("useAPI") === null)
         {
-            localStorage.setItem('useAPI', 'true'); 
+            localStorage.setItem('useAPI', useAPISetting); 
         }
 
         if (localStorage.getItem("useAPI") === 'true'){
@@ -74,7 +79,7 @@ export class MyApp {
         }
 
         if (localStorage.getItem("offlineOnly") === undefined || localStorage.getItem("offlineOnly") === null) {
-            localStorage.setItem('offlineOnly', 'false');
+            localStorage.setItem('offlineOnly', offlineOnlySetting);
         }
 
         if (localStorage.getItem("offlineOnly") === 'true') {
@@ -89,6 +94,10 @@ export class MyApp {
 
             localStorage.setItem('budgetYear', dt.getFullYear().toString());
             localStorage.setItem('budgetMonth', monthNames[dt.getMonth()]);    
+        }
+
+        if (localStorage.getItem('budgetIncome') === undefined || localStorage.getItem('budgetIncome') === null) {
+            localStorage.setItem('budgetIncome', '0');
         }
 
         this.homePage = HomePage;

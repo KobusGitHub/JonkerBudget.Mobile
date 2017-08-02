@@ -20,7 +20,14 @@
               <ion-option *ngFor="let month of monthNames" [value]="month">{{month}}</ion-option>
           </ion-select>
         </ion-item>
-       
+
+      <ion-item style="width: 100%; border-width: 0px; padding: 0px;">
+        <i>Income</i>
+      </ion-item>
+      <ion-item style="width: 100%; border-style: solid; border-width: 1px; border-radius: 10px; border-color: lightgray ">
+        <ion-input type="number"  [(ngModel)]='income'></ion-input>
+      </ion-item>
+
       
        
       </ion-card-content>

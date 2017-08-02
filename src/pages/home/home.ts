@@ -4,6 +4,7 @@ import { ToastController, Events, LoadingController } from 'ionic-angular';
 import { ToastProvider, DatabaseSqlServiceProvider, ExpenseApi } from '../../shared/shared-providers'
 import { SqliteCallbackModel, CategoryModel, ExpenseModel, ExpenseApiModel } from '../../shared/shared-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ForecastPage } from '../../shared/shared-pages';
 
 @Component({
   selector: 'page-home',
@@ -16,7 +17,9 @@ export class HomePage {
   isTransferExpense: boolean = false;
   isNegativeExpense: boolean = false;
   transferToGuidId = '';
-
+  incomeUsed = 0;
+  incomeLeft = 0;
+  
   useAPI: boolean = false;        
 
   constructor(public navCtrl: NavController,
@@ -84,8 +87,9 @@ export class HomePage {
 
   buildEmptyModel(){
     this.formData.id = 0;
-    this.formData.year = parseInt(localStorage.getItem('budgetYear')),
-    this.formData.month = localStorage.getItem('budgetMonth')
+    this.formData.year = parseInt(localStorage.getItem('budgetYear'));
+    this.formData.month = localStorage.getItem('budgetMonth');
+    this.formData.income = parseFloat(localStorage.getItem('budgetIncome'));
     this.formData.categoryGuidId = '';
     this.formData.expenseValue = '';
     this.formData.expenseCode = '';
@@ -109,10 +113,20 @@ export class HomePage {
      if(result.success) {
       this.categories = result.data;
       this.buildEmptyModel()
+
+      this.dbProvider.expenseDbProvider.getSumInPeriod(this.formData.year, this.formData.month, e => this.getSumInPeriodCallback(e));
+
       return;
     }
     this.toast.showToast('Error retrieving data');
    
+  }
+
+  getSumInPeriodCallback(result: SqliteCallbackModel) {
+    if (result.success) {
+      this.incomeUsed = result.data;
+      this.incomeLeft = this.formData.income - this.incomeUsed
+    }
   }
 
   modelToSave: ExpenseModel = null;
@@ -309,6 +323,13 @@ export class HomePage {
       this.toast.showToast('Error saving transfer');
       alert(JSON.stringify(result.data));
       
+  }
+
+  forecastClick(){
+    let obj = {
+      incomeLeft: this.incomeLeft     
+    };
+    this.navCtrl.push(ForecastPage, obj);
   }
 
 }

@@ -5,7 +5,9 @@
 <ion-content padding>
   <ion-item icon-left>
     <ion-badge>{{formData.year}}</ion-badge>
-    <ion-badge>{{formData.month}}</ion-badge>
+    <ion-badge>{{formData.month}}</ion-badge>    
+    <ion-badge *ngIf="incomeLeft >= 0" ><currency-formatter [numberToFormat]='incomeLeft' (click)="forecastClick()"></currency-formatter></ion-badge>
+    <ion-badge *ngIf="incomeLeft < 0" color="danger"><currency-formatter [numberToFormat]='incomeLeft' (click)="forecastClick()"></currency-formatter></ion-badge>
    </ion-item>
  
   <ion-item icon-left  style="color: gray;">

@@ -4,7 +4,8 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
-import { HomePage, ListPage, SetupPage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage, NetReportPage, ExpenseDetailPage, CategoryReportPage } from '../shared/shared-pages';
+import { HomePage, ListPage, SetupPage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, 
+  ReportPage, SyncPage, NetReportPage, ExpenseDetailPage, CategoryReportPage, ForecastPage } from '../shared/shared-pages';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,6 +27,7 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, Curre
     NetReportPage,
     ExpenseDetailPage,
     CategoryReportPage,
+    ForecastPage,
     MenuHeaderComponent,
     NoMenuHeaderComponent,
     TrackBudgetComponent,
@@ -51,6 +53,7 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, Curre
     NetReportPage,
     ExpenseDetailPage,
     CategoryReportPage,
+    ForecastPage,
     MenuHeaderComponent,
     NoMenuHeaderComponent,
     TrackBudgetComponent,

@@ -1,0 +1,48 @@
+<ion-header>
+  <menu-header headerText="Forecast"></menu-header>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+    <div style="width: 100%; text-align: right">
+        <ion-badge *ngIf="forecastBudget >= 0">
+          <currency-formatter [numberToFormat]='forecastBudget'></currency-formatter>
+        </ion-badge>
+        <ion-badge *ngIf="forecastBudget < 0" color="danger">
+          <currency-formatter [numberToFormat]='forecastBudget'></currency-formatter>
+        </ion-badge>
+    </div>
+      <!--<currency-formatter style="text-align: right" [numberToFormat]='forecastBudget'></currency-formatter>-->
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+
+        <ion-row style="border-bottom: black; border-width: 1px; border-bottom-style: solid;">
+          <ion-col>
+            <b>Category</b>
+          </ion-col>
+          <ion-col style="text-align: right">
+            <b>Outstanding Value</b>
+          </ion-col>
+         
+        </ion-row>
+        <ion-row style="border-bottom: lightgray; border-width: 1px; border-bottom-style: solid;" *ngFor="let record of catOutstandingBudgets" (click)="budgetClick(record)">
+
+          <ion-checkbox color="secondary" style="margin-right: 4px; margin-top:7px;" [(ngModel)]="record.selected" (click)="calculate()"></ion-checkbox>
+          <ion-col>
+            {{record.category}}
+          </ion-col>
+          <ion-col style="text-align: right">
+            <currency-formatter style="text-align: right" [numberToFormat]='record.outstandingValue'></currency-formatter>
+          </ion-col>
+
+          <!--<ion-col style="text-align: right">-->
+           
+          <!--</ion-col>-->
+
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

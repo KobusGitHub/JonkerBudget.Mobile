@@ -17,12 +17,15 @@ export class SyncServiceProvider {
         
         // TODO pass your and month to every method. Not in the constructor because if the user set the month then it wont pickup the change
         this.syncYear = parseInt(localStorage.getItem('budgetYear')),
-            this.syncMonth = localStorage.getItem('budgetMonth')
+        this.syncMonth = localStorage.getItem('budgetMonth')
     }
 
    
 
     sync(callbackMethod) {
+        this.syncYear = parseInt(localStorage.getItem('budgetYear')),
+        this.syncMonth = localStorage.getItem('budgetMonth')
+
         this.syncCategories();
         //this.databaseSqlServiceProvider.expenseDbProvider.getAllNonSyncedRecords(2017, 'May', e => this.getAllNonSyncedRecordsCallback(e));
         this.callbackMethod = callbackMethod;

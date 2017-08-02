@@ -70,6 +70,25 @@ doesTableExist(callbackMethod) {
     return resultData;
   }
 
+
+  getSumInPeriod(year: number, month: string, callbackMethod) {
+    var result = this.getSumInPeriodInternal(this.getTable(), year, month)
+    callbackMethod({ success: true, data: result });
+  }
+  private getSumInPeriodInternal(table, year: number, month: string): any {
+    var sumValue: number = 0;
+
+    table.data.forEach(row => {
+      if (row.year === year && row.month === month) {
+        sumValue += row.expenseValue;
+      }
+    });
+
+    return sumValue;
+  }
+
+
+
   getAllInPeriod(year:number, month:string, callbackMethod){
     var result = this.getAllInPeriodInternal(this.getTable(), year, month)
     callbackMethod({success: true, data: result});
