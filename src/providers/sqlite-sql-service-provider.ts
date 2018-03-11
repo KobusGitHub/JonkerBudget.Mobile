@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 /*
   Generated class for the ToolsSqlProviderTs provider.
@@ -11,19 +11,15 @@ import { SQLite } from 'ionic-native';
 */
 @Injectable()
 export class SqliteSqlServiceProvider {
-  db: SQLite;
+  private options = { name: "data.db", location: 'default', createFromLocation: 1 };
 
-  constructor(public http: Http) {
-    this.db = new SQLite();
+  constructor(public http: Http, private sqlite: SQLite) {
+   
   }
 
   executeSql(sqlStatement, callbackMethod): any {
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql(sqlStatement, {}).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql(sqlStatement, {}).then((data) => {
         var result = [];
         if(data.rows.length > 0) {
             for(var i = 0; i < data.rows.length; i++) {

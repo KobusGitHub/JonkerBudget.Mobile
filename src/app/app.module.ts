@@ -10,10 +10,18 @@ import { HomePage, ListPage, SetupPage, SqlitePage, BudgetListPage, TempPage, Se
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { Splash } from '../pages/splash/splash';
+import { Delay } from '../pages/delay/delay';
+
 import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, CurrencyFormatterComponent } from '../shared/shared-components';
+
+import { SQLite } from '@ionic-native/sqlite';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 @NgModule({
   declarations: [
+    Splash,
+    Delay,
     MyApp,
     HomePage,
     ListPage,
@@ -40,6 +48,8 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, Curre
   ],
   bootstrap: [IonicApp],
   entryComponents: [
+    Splash,
+    Delay,
     MyApp,
     HomePage,
     ListPage,
@@ -62,6 +72,8 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, Curre
   providers: [
     StatusBar,
     SplashScreen,
+    SQLite,
+    EmailComposer,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

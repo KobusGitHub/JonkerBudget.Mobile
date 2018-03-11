@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { SQLite } from 'ionic-native';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { ExpenseModel, ExpenseApiModel } from "../shared/shared-models";
 import { ExpenseSqlServiceProviderInterface } from "../shared/shared-interfaces";
 
 
 @Injectable()
 export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInterface {
-  db: SQLite;
-
-  constructor(public http: Http) {
-    this.db = new SQLite();
+  
+  private options = { name: "data.db", location: 'default', createFromLocation: 1 };
+  constructor(public http: Http, private sqlite: SQLite) {
+    
   }
 
   doesTableExist(callbackMethod) {
-    this.db.openDatabase({
-        name: 'data.db',
-        location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("SELECT count(*) as recCount FROM sqlite_master WHERE name='Expense'",[]).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("SELECT count(*) as recCount FROM sqlite_master WHERE name='Expense'",[]).then((data) => {
         var result : boolean = parseInt(data.rows.item(0).recCount) > 0;
         callbackMethod({success: true, data: result});
       }, (err) => {
@@ -33,12 +29,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   initialiseTable(callbackMethod) {
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql('CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, year NUMERIC, month TEXT, categoryGuidId TEXT, expenseValue NUMERIC, recordDate TEXT, expenseCode TEXT, comment TEXT, inSync NUMERIC)', {}).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql('CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, year NUMERIC, month TEXT, categoryGuidId TEXT, expenseValue NUMERIC, recordDate TEXT, expenseCode TEXT, comment TEXT, inSync NUMERIC)', {}).then((data) => {
         callbackMethod({success: true, data: data.rows.item(0)});
       }, (err) => {
         callbackMethod({success: false, data: err});
@@ -50,12 +42,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   insertRecord(expenseModel: ExpenseModel, callbackMethod) {
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, comment, inSync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, comment, inSync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
       , [
           expenseModel.year,
           expenseModel.month,
@@ -77,14 +65,11 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   updateRecord(expenseModel: ExpenseModel, callbackMethod) {
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-        // WORK
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+     
 
       let sql = "UPDATE Expense SET year = " + expenseModel.year + ", month = '" + expenseModel.month + "', categoryGuidId = '" + expenseModel.categoryGuidId + "', expenseValue = " + expenseModel.expenseValue + ", recordDate = '" + expenseModel.recordDate + "', expenseCode = '" + expenseModel.expenseCode + "', comment = '" + expenseModel.comment + "', inSync = " + this.boolToNum(expenseModel.inSync) + " WHERE id = " + expenseModel.id;
-        this.db.executeSql(sql, {}).then((data) => {
+        db.executeSql(sql, {}).then((data) => {
           callbackMethod({success: true, data: data});
         }, (err) => {
           callbackMethod({success: false, data: err});
@@ -97,12 +82,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   getRecord(id, callbackMethod) {
     let result: any = {};
 
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("SELECT * FROM Expense WHERE id =" + id ,[]).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("SELECT * FROM Expense WHERE id =" + id ,[]).then((data) => {
         result = [];
         if(data.rows.length > 0) {
             for(var i = 0; i < data.rows.length; i++) {
@@ -130,12 +111,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   getSumInPeriod(year: number, month: string, callbackMethod) {
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("SELECT SUM(ExpenseValue) as sumExpense FROM Expense WHERE year=" + year + " AND month='" + month + "'", []).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("SELECT SUM(ExpenseValue) as sumExpense FROM Expense WHERE year=" + year + " AND month='" + month + "'", []).then((data) => {
        
         callbackMethod({ success: true, data: data.rows.item(0).sumExpense });
       }, (err) => {
@@ -150,12 +127,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   getAllInPeriod(year:number, month:string, callbackMethod) {
     let result: ExpenseModel[] = [];
 
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("SELECT * FROM Expense WHERE year=" + year + " AND month='" + month + "'",[]).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("SELECT * FROM Expense WHERE year=" + year + " AND month='" + month + "'",[]).then((data) => {
         result = [];
         if(data.rows.length > 0) {
             for(var i = 0; i < data.rows.length; i++) {
@@ -185,12 +158,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   getAll(callbackMethod) {
     let result: ExpenseModel[] = [];
 
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("SELECT * FROM Expense",[]).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("SELECT * FROM Expense",[]).then((data) => {
         result = [];
         if(data.rows.length > 0) {
             for(var i = 0; i < data.rows.length; i++) {
@@ -218,12 +187,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   deleteRecord(id: number, callbackMethod){
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("DELETE FROM Expense WHERE id=" + id,[]).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("DELETE FROM Expense WHERE id=" + id,[]).then((data) => {
         callbackMethod({success: true, data: data});
       }, (err) => {
         callbackMethod({success: false, data: err});
@@ -236,12 +201,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   }
 
   syncTable(year:number, month:string, expenseModels: ExpenseModel[], callbackMethod){
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("DELETE FROM Expense WHERE year=" + year + " AND month='" + month + "'", {}).then((data) => {} , (err) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("DELETE FROM Expense WHERE year=" + year + " AND month='" + month + "'", {}).then((data) => {} , (err) => {
         callbackMethod({success: false, data: err}); 
         return;
       });
@@ -249,7 +210,7 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       for(var index = 0; index < expenseModels.length; index++){
         let budgetSetupModel = expenseModels[index];  
 
-        this.db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, comment, inSync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+        db.executeSql('INSERT INTO Expense (year, month, categoryGuidId, expenseValue, recordDate, expenseCode, comment, inSync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         , [
             budgetSetupModel.year, 
             budgetSetupModel.month,
@@ -276,12 +237,8 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
   getAllNonSyncedRecords(year:number, month:string, callbackMethod){
     let result: ExpenseApiModel[] = [];
 
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
-
-      this.db.executeSql("SELECT * FROM Expense WHERE inSync = 0 AND year=" + year + " AND month='" + month + "'",[]).then((data) => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      db.executeSql("SELECT * FROM Expense WHERE inSync = 0 AND year=" + year + " AND month='" + month + "'",[]).then((data) => {
         result = [];
         if(data.rows.length > 0) {
             for(var i = 0; i < data.rows.length; i++) {
@@ -320,13 +277,11 @@ export class ExpenseSqlServiceProvider implements ExpenseSqlServiceProviderInter
       }
     });
     
-    this.db.openDatabase({
-      name: 'data.db',
-      location: 'default' // the location field is required
-    }).then(() => {
+    this.sqlite.create(this.options).then((db: SQLiteObject) => {
+      
 
       let sql = "UPDATE Expense SET inSync = 1 WHERE uniqueCodes IN (" + uniqueCodeCommaList + ")";
-      this.db.executeSql(sql, {}).then((data) => {
+      db.executeSql(sql, {}).then((data) => {
         callbackMethod({success: true, data: data});
       }, (err) => {
         callbackMethod({success: false, data: err});

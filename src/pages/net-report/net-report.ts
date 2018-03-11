@@ -4,8 +4,7 @@ import { DatabaseSqlServiceProvider, ToastProvider } from '../../shared/shared-p
 import { SqliteCallbackModel } from '../../shared/shared-models'
 import { CategoryReportPage} from '../../shared/shared-pages'
 import { LoadingController } from 'ionic-angular';
-import { EmailComposer } from 'ionic-native';
-
+import { EmailComposer } from '@ionic-native/email-composer';
 /**
  * Generated class for the NetReport page.
  *
@@ -27,7 +26,7 @@ loader: any;
   showReport = false;
   categories = [];
   
-  constructor(private events: Events, public navCtrl: NavController, public navParams: NavParams, private toast: ToastProvider, public loading: LoadingController, public databaseSqlServiceProvider: DatabaseSqlServiceProvider) {
+  constructor(private events: Events, public navCtrl: NavController, public navParams: NavParams, private toast: ToastProvider, public loading: LoadingController, public databaseSqlServiceProvider: DatabaseSqlServiceProvider, private emailComposer: EmailComposer) {
     this.selectedYear = parseInt(localStorage.getItem('budgetYear'));
     this.selectedMonth = localStorage.getItem('budgetMonth');
   
@@ -129,7 +128,7 @@ loader: any;
       body: messageBody,
       isHtml: true
     };
-    EmailComposer.open(email);
+    this.emailComposer.open(email);
   }
 
 }
