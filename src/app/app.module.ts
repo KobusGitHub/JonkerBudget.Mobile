@@ -18,6 +18,10 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, Curre
 import { SQLite } from '@ionic-native/sqlite';
 import { EmailComposer } from '@ionic-native/email-composer';
 
+import { AngularFireModule } from "angularfire2";
+import { FIREBASE_CONFIG } from './firebase.credentials';
+import { AngularFireDatabaseModule } from "angularfire2/database";
+
 @NgModule({
   declarations: [
     Splash,
@@ -45,6 +49,8 @@ import { EmailComposer } from '@ionic-native/email-composer';
     BrowserModule,
     HttpModule, // Newly add for ionic 3
     IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    AngularFireDatabaseModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

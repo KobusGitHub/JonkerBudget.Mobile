@@ -5,43 +5,57 @@
 
 <ion-content padding>
   <!--{{frmCmpBudget.category}}-->
-    <!--<button ion-button (click)="save()">Save</button>-->
-    <div (click)="favouriteClick()">
+  <!--<button ion-button (click)="save()">Save</button>-->
+  <div (click)="favouriteClick()">
+    <ion-item icon-left>
+      <span style="color: gray">
+        <b>Favourite:</b>
+      </span>
+      <ion-icon *ngIf="isFavourite" ios="ios-star" md="ios-star" style="font-size: 30px; color: Red; margin-right: 10px; margin-top: 10px; margin-left: 5px;"></ion-icon>
+      <ion-icon *ngIf="!isFavourite" ios="ios-star-outline" md="ios-star-outline" style="font-size: 30px; color: lightgray; margin-right: 10px; margin-top: 10px; margin-left: 5px;"></ion-icon>
+    </ion-item>
+
+  </div>
+
+  <form [formGroup]="frmBudget" novalidate>
+
+    <ion-list>
+
       <ion-item icon-left>
-        <span style="color: gray"><b>Favourite:</b></span>
-        <ion-icon *ngIf="isFavourite" ios="ios-star" md="ios-star" style="font-size: 30px; color: Red; margin-right: 10px; margin-top: 10px; margin-left: 5px;"></ion-icon>
-        <ion-icon *ngIf="!isFavourite" ios="ios-star-outline" md="ios-star-outline" style="font-size: 30px; color: lightgray; margin-right: 10px; margin-top: 10px; margin-left: 5px;"></ion-icon>
-      </ion-item>
-      
-    </div>
-
- <form  [formGroup]="frmBudget" novalidate>
-
-  <ion-list>
-   
-     <ion-item icon-left>
         <ion-label floating>
           <b>Category</b>
         </ion-label>
-        <ion-input type="text" formControlName="frmCmpCategory" maxlength="50"  [ngModel]='formData.categoryName'></ion-input>
+        <ion-input type="text" formControlName="frmCmpCategory" maxlength="50" [ngModel]='formData.categoryName'></ion-input>
       </ion-item>
       <ion-item icon-left>
         <ion-label floating>
           <b>Budget</b>
         </ion-label>
-        <ion-input type="text" formControlName="frmCmpBudget" maxlength="50"  [ngModel]='formData.budget'></ion-input>
+        <ion-input type="text" formControlName="frmCmpBudget" maxlength="50" [ngModel]='formData.budget'></ion-input>
       </ion-item>
 
-  </ion-list>
- </form>
+    </ion-list>
+  </form>
 
+  <button ion-button icon-right (click)="testClick()">
+    Test
+  </button>
+  <button ion-button icon-right (click)="testClick1()">
+    Test1
+  </button>
+
+  {{ testData | json }}
+  
+  <div ion-item *ngFor="let item of testDataList" (click)="editClick($event, item)">
+    {{item.categoryName}}
+  </div>
 </ion-content>
 
 <ion-footer>
   <button ion-buttons ion-item [disabled]='!frmBudget.valid' (click)="saveClick(frmBudget.value)">
     <div class="item-note" item-right>
-        Save
-      </div>
+      Save
+    </div>
   </button>
 </ion-footer>
 
@@ -49,8 +63,8 @@
   <ion-toolbar>
     <ion-buttons right>
       <button ion-button icon-right [disabled]='!frmBudget.valid' (click)="saveClick(frmBudget.value)">
-            Save
-          <ion-icon name="arrow-dropright"></ion-icon>
+        Save
+        <ion-icon name="arrow-dropright"></ion-icon>
       </button>
     </ion-buttons>
   </ion-toolbar>

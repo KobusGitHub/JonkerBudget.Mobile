@@ -10,7 +10,7 @@ import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPag
 import {
   DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
   CategorySqlServiceProvider, MockCategorySqlServiceProvider,
-  ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
+  ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider, CategoryFirebaseServiceProvider,
   SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider, ServicePackProvider, CallbackMangerServiceProvider
 } from '../shared/shared-providers'
 
@@ -22,6 +22,7 @@ import { SqliteCallbackModel } from '../shared/shared-models';
   providers: [DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
     CategorySqlServiceProvider, MockCategorySqlServiceProvider,
     ExpenseSqlServiceProvider, MockExpenseSqlServiceProvider,
+    CategoryFirebaseServiceProvider,
     SqliteSqlServiceProvider, ToastProvider, ExpenseApi, CategoryApi, SyncServiceProvider, ServicePackProvider]
 })
 export class MyApp {
