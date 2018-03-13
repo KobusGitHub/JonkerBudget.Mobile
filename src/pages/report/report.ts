@@ -34,7 +34,8 @@ export class ReportPage {
         content: 'Checking Database, please wait...', 
     }); 
     this.loader.present().then(() => {
-        this.databaseSqlServiceProvider.categoryDbProvider.getAll(e => this.getAllCategoriesCallback(e)); 
+        //this.databaseSqlServiceProvider.categoryDbProvider.getAll(e => this.getAllCategoriesCallback(e)); 
+        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.getAll(e => this.getAllCategoriesCallback(e)); 
     });
   }
 
@@ -51,7 +52,8 @@ export class ReportPage {
         content: 'Checking Database, please wait...', 
     }); 
     this.loader.present().then(() => {
-        this.databaseSqlServiceProvider.expenseDbProvider.getAllInPeriod(this.selectedYear, this.selectedMonth, e => this.getAllInPeriodCallback(e)); 
+        //this.databaseSqlServiceProvider.expenseDbProvider.getAllInPeriod(this.selectedYear, this.selectedMonth, e => this.getAllInPeriodCallback(e)); 
+        this.databaseSqlServiceProvider.expenseFirebaseDbProdiver.getAllInPeriod(this.selectedYear, this.selectedMonth, e => this.getAllInPeriodCallback(e)); 
     });
   }
 
@@ -69,7 +71,8 @@ export class ReportPage {
         });
 
         this.records.push({
-          expenseId: rec.id,
+          //expenseId: rec.id,
+          expenseGuidId: rec.guidId,
           category: catName,
           expenseValue: rec.expenseValue
         })
@@ -78,7 +81,8 @@ export class ReportPage {
   }
 
   detailClick(event, item) {
-    let obj = { expenseId: item.expenseId };
+    //let obj = { expenseId: item.expenseId };
+    let obj = { expenseGuidId: item.expenseGuidId };
     this.navCtrl.push(ExpenseDetailPage, obj);
   }
 

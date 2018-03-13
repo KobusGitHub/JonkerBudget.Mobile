@@ -56,8 +56,11 @@ export class ForecastPage {
       
       this.callbackManger.add("getExpensesCallback");
       this.callbackManger.add("getCategoriesCallback");
-      this.dbProvider.expenseDbProvider.getAllInPeriod(this.year, this.month, e => this.getExpensesCallback(e));
-      this.dbProvider.categoryDbProvider.getAll(e => this.getCategoriesCallback(e));
+      //this.dbProvider.expenseDbProvider.getAllInPeriod(this.year, this.month, e => this.getExpensesCallback(e));
+      //this.dbProvider.categoryDbProvider.getAll(e => this.getCategoriesCallback(e));
+
+      this.dbProvider.expenseFirebaseDbProdiver.getAllInPeriod(this.year, this.month, e => this.getExpensesCallback(e));
+      this.dbProvider.categoryFirebaseDbProdiver.getAll(e => this.getCategoriesCallback(e));
 
     });
 

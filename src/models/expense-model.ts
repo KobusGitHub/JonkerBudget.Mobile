@@ -1,5 +1,6 @@
 export class ExpenseModel {
-  id: number;
+  id?: number;
+  guidId: string;
   categoryGuidId: string;
   expenseValue: number;
   year: number;
@@ -8,6 +9,6 @@ export class ExpenseModel {
   expenseCode: string;
   comment: string;
   inSync: boolean;
-
+  year_month?: string;
 
 }

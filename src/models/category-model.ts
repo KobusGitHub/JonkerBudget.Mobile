@@ -1,5 +1,5 @@
 export class CategoryModel {
-  id: number;
+  id?: number;
   guidId: string;
   categoryName: string;
   budget: number;

@@ -34,7 +34,8 @@ export class BudgetListPage {
           content: 'Busy, please wait...', 
       }); 
     this.loader.present().then(() => {
-          this.databaseProvider.categoryDbProvider.getAll(e => this.getAllCallback(e))
+          //this.databaseProvider.categoryDbProvider.getAll(e => this.getAllCallback(e))
+          this.databaseProvider.categoryFirebaseDbProdiver.getAll(e => this.getAllCallback(e))
       });
 
    
@@ -58,12 +59,14 @@ export class BudgetListPage {
   }
 
   editClick(event, item) {
-     let obj = {budgetSetupId:item.id};
+     //let obj = {budgetSetupId:item.id};
+     let obj = {categoryGuidId:item.guidId};
     this.navCtrl.push(SetupPage, obj);
   }
 
   newItemClick(){
-    let obj = {budgetSetupId:0};
+    //let obj = {budgetSetupId:0};
+    let obj = {categoryGuidId:''};
     this.navCtrl.push(SetupPage, obj);
   }
 }

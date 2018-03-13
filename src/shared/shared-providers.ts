@@ -11,6 +11,7 @@ export * from '../providers/category-api-service-provider';
 export * from '../providers/service-pack-provider';
 export * from '../providers/callback-manager-service-provider';
 export * from '../providers/firebase/category-firebase-service-provider';
+export * from '../providers/firebase/expense-firebase-service-provider';
 
 export * from '../providers/database-service-provider'
 export * from '../providers/sync-service-provider';

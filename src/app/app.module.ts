@@ -21,6 +21,7 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { AngularFireModule } from "angularfire2";
 import { FIREBASE_CONFIG } from './firebase.credentials';
 import { AngularFireDatabaseModule } from "angularfire2/database";
+import { AngularFireOfflineModule } from 'angularfire2-offline';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { AngularFireDatabaseModule } from "angularfire2/database";
     HttpModule, // Newly add for ionic 3
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    AngularFireOfflineModule,
     AngularFireDatabaseModule
   ],
   bootstrap: [IonicApp],

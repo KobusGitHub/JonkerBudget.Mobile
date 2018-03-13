@@ -13,7 +13,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class SetupPage {
   loader: any;
-  private budgetSetupId = 0;
+  //private budgetSetupId = 0;
+  private categoryGuidId = '';
   frmBudget: FormGroup;
   formData: any = {};
   useAPI: boolean = false;
@@ -24,20 +25,19 @@ export class SetupPage {
     private databaseSqlServiceProvider: DatabaseSqlServiceProvider,
     public loading: LoadingController, public events: Events, public categoryApi: CategoryApi,
     private toast: ToastProvider, public builder: FormBuilder) {
-    this.budgetSetupId = parseInt(this.navParams.get('budgetSetupId'));
+    //this.budgetSetupId = parseInt(this.navParams.get('budgetSetupId'));
+    this.categoryGuidId = this.navParams.get('categoryGuidId');
 
     this.setUseApiValue();
     events.subscribe('UseApiChanged', (time) => {
       this.setUseApiValue();
     });
 
-    console.log(this.budgetSetupId);
-
-    if (!this.budgetSetupId) {
-      this.budgetSetupId = 0
-    }
-    console.log(this.budgetSetupId);
-
+    
+    // if (!this.budgetSetupId) {
+    //   this.budgetSetupId = 0
+    // }
+    
     this.frmBudget = builder.group({
       'frmCmpCategory': [{ value: '' }, Validators.required],
       'frmCmpBudget': [{ value: '' }, Validators.required]
@@ -69,7 +69,8 @@ export class SetupPage {
 
 
   loadData() {
-    if (this.budgetSetupId === 0) {
+    //if (this.budgetSetupId === 0) {
+    if (this.categoryGuidId == '') {
       this.buildEmptyModel();
       return;
     }
@@ -78,7 +79,8 @@ export class SetupPage {
       content: 'Busy, please wait...',
     });
     this.loader.present().then(() => {
-      this.databaseSqlServiceProvider.categoryDbProvider.getRecord(this.budgetSetupId, e => this.getRecordCallback(e));
+      //this.databaseSqlServiceProvider.categoryDbProvider.getRecord(this.budgetSetupId, e => this.getRecordCallback(e));
+      this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.getRecord(this.categoryGuidId, e => this.getRecordCallback(e));
     });
   }
 
@@ -107,7 +109,7 @@ export class SetupPage {
 
   saveClick(frmCmps) {
     this.modelToSave = {
-      id: this.budgetSetupId,
+      //id: this.budgetSetupId,
       guidId: this.formData.guidId,
       categoryName: frmCmps.frmCmpCategory,
       budget: frmCmps.frmCmpBudget,
@@ -116,7 +118,7 @@ export class SetupPage {
     }
 
 
-    if (this.budgetSetupId === 0) {
+    if (this.categoryGuidId == '') {
       this.modelToSave.guidId = this.getNewGuid();
     }
 
@@ -132,7 +134,8 @@ export class SetupPage {
     this.loader = this.loading.create({ content: 'Busy uploading category, please wait...' });
     this.loader.present().then(() => {
 
-      if (this.budgetSetupId === 0) {
+      //if (this.budgetSetupId === 0) {
+      if (this.categoryGuidId == '') {
         this.categoryApi.addCategory(this.modelToSave)
           .subscribe(
             res => {
@@ -193,28 +196,20 @@ export class SetupPage {
   saveCategoryToSql() {
     this.loader = this.loading.create({ content: 'Busy saving on device, please wait...' });
     this.loader.present().then(() => {
-      if (this.budgetSetupId === 0) {
-        this.databaseSqlServiceProvider.categoryDbProvider.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e));
-        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.insertFirebaseBudgetSetupTableCallback(e))
+      //if (this.budgetSetupId === 0) {
+      if (this.categoryGuidId == '') {
+        //this.databaseSqlServiceProvider.categoryDbProvider.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e));
+        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e))
 
       } else {
-        this.databaseSqlServiceProvider.categoryDbProvider.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e));
+        //this.databaseSqlServiceProvider.categoryDbProvider.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e));
+        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e))
+        
 
       }
     });
   }
-  insertFirebaseBudgetSetupTableCallback(result: SqliteCallbackModel) {
-    this.loader.dismiss();
-    if (result.success) {
-      this.toast.showToast('Insert category into firebase successfully');
-      this.events.publish('DataUpdated', Date.now());
-      this.navCtrl.pop();
-      console.log('Firebase: ');
-      console.log(result.data);
-      return;
-    }
-    this.toast.showToast('Firebase Error');
-  }
+  
 
   insertBudgetSetupTableCallback(result: SqliteCallbackModel) {
     this.loader.dismiss();

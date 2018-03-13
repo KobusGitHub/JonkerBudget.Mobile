@@ -37,7 +37,8 @@ loader: any;
         content: 'Checking Database, please wait...', 
     }); 
     this.loader.present().then(() => {
-        this.databaseSqlServiceProvider.categoryDbProvider.getAll(e => this.getAllCategoriesCallback(e)); 
+        //this.databaseSqlServiceProvider.categoryDbProvider.getAll(e => this.getAllCategoriesCallback(e)); 
+        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.getAll(e => this.getAllCategoriesCallback(e)); 
     });
 
     
@@ -68,7 +69,8 @@ loader: any;
         content: 'Checking Database, please wait...', 
     }); 
     this.loader.present().then(() => {
-        this.databaseSqlServiceProvider.expenseDbProvider.getAllInPeriod(this.selectedYear, this.selectedMonth, e => this.getAllInPeriodCallback(e)); 
+        //this.databaseSqlServiceProvider.expenseDbProvider.getAllInPeriod(this.selectedYear, this.selectedMonth, e => this.getAllInPeriodCallback(e)); 
+        this.databaseSqlServiceProvider.expenseFirebaseDbProdiver.getAllInPeriod(this.selectedYear, this.selectedMonth, e => this.getAllInPeriodCallback(e)); 
     });
   }
 

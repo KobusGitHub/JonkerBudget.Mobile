@@ -85,6 +85,16 @@ export class HomePage {
     return "Category"
   }
 
+  getNewGuid(): string {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+  };
+  
   buildEmptyModel(){
     this.formData.id = 0;
     this.formData.year = parseInt(localStorage.getItem('budgetYear'));
@@ -103,7 +113,8 @@ export class HomePage {
         content: 'Busy, please wait...',
     });
     this.loader.present().then(() => {
-      this.dbProvider.categoryDbProvider.getAll(e => this.getAllCallback(e));
+      //this.dbProvider.categoryDbProvider.getAll(e => this.getAllCallback(e));
+      this.dbProvider.categoryFirebaseDbProdiver.getAll(e => this.getAllCallback(e))
     });
 
   }
@@ -114,7 +125,8 @@ export class HomePage {
       this.categories = result.data;
       this.buildEmptyModel()
 
-      this.dbProvider.expenseDbProvider.getSumInPeriod(this.formData.year, this.formData.month, e => this.getSumInPeriodCallback(e));
+      //this.dbProvider.expenseDbProvider.getSumInPeriod(this.formData.year, this.formData.month, e => this.getSumInPeriodCallback(e));
+      this.dbProvider.expenseFirebaseDbProdiver.getSumInPeriod(this.formData.year, this.formData.month, e => this.getSumInPeriodCallback(e));
 
       return;
     }
@@ -139,6 +151,7 @@ export class HomePage {
         year: parseInt(localStorage.getItem('budgetYear')),
         month: localStorage.getItem('budgetMonth'),
         categoryGuidId: this.formData.categoryGuidId,
+        guidId: this.getNewGuid(),
         expenseValue: this.formData.expenseValue,
         comment: this.formData.comment,
         recordDate: new Date().toString(),
@@ -153,6 +166,7 @@ export class HomePage {
         year: parseInt(localStorage.getItem('budgetYear')),
         month: localStorage.getItem('budgetMonth'),
         categoryGuidId: this.formData.categoryGuidId,
+        guidId: this.getNewGuid(),
         expenseValue: eValue,
         comment: this.formData.comment,
         recordDate: new Date().toString(),
@@ -184,6 +198,7 @@ export class HomePage {
           year: sqlModel.year,
           month: sqlModel.month,
           categoryGuidId: sqlModel.categoryGuidId,
+          guidId: sqlModel.guidId,
           expenseValue: sqlModel.expenseValue,
           comment: this.formData.comment,
           recordDate: new Date(),
@@ -215,7 +230,9 @@ export class HomePage {
 
   saveExpenseToSql(){
     this.loader.setContent('Saving to device, please wait..');
-    this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
+    
+    //this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
+    this.dbProvider.expenseFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.insertExpenseTableCallback(e));
   }
 
 
@@ -271,6 +288,7 @@ export class HomePage {
       year: parseInt(localStorage.getItem('budgetYear')),
       month: localStorage.getItem('budgetMonth'),
       categoryGuidId: this.transferToGuidId,
+      guidId: this.getNewGuid(),
       expenseValue: this.formData.expenseValue,
       comment: this.formData.comment,
       recordDate: new Date().toString(),
@@ -309,7 +327,8 @@ export class HomePage {
 
   saveTransferToSql(){
     this.loader.setContent('Saving transfer to device, please wait..');
-    this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
+    //this.dbProvider.expenseDbProvider.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
+    this.dbProvider.expenseFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.transferToExpenseTableCallback(e));
   }
 
   transferToExpenseTableCallback(result: SqliteCallbackModel){

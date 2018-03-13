@@ -51,8 +51,10 @@ export class TrackBudgetComponent {
     this.textColor = 'lightgray';
 
     
-    this.databaseDbProvider.categoryDbProvider.getRecordByGuidId(this.categoryGuidId, e => this.getCategoryCallback(e))
-    this.databaseDbProvider.expenseDbProvider.getAllInPeriod(this.budgetYear, this.budgetMonth, e => this.getAllExpensesCallback(e))
+    // this.databaseDbProvider.categoryDbProvider.getRecordByGuidId(this.categoryGuidId, e => this.getCategoryCallback(e))
+    // this.databaseDbProvider.expenseDbProvider.getAllInPeriod(this.budgetYear, this.budgetMonth, e => this.getAllExpensesCallback(e))
+    this.databaseDbProvider.categoryFirebaseDbProdiver.getRecordByGuidId(this.categoryGuidId, e => this.getCategoryCallback(e))
+    this.databaseDbProvider.expenseFirebaseDbProdiver.getAllInPeriod(this.budgetYear, this.budgetMonth, e => this.getAllExpensesCallback(e))
   
   }
 
