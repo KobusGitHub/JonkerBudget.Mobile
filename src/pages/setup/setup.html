@@ -37,18 +37,7 @@
     </ion-list>
   </form>
 
-  <button ion-button icon-right (click)="testClick()">
-    Test
-  </button>
-  <button ion-button icon-right (click)="testClick1()">
-    Test1
-  </button>
-
-  {{ testData | json }}
   
-  <div ion-item *ngFor="let item of testDataList" (click)="editClick($event, item)">
-    {{item.categoryName}}
-  </div>
 </ion-content>
 
 <ion-footer>

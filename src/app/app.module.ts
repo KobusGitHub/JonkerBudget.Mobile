@@ -18,10 +18,18 @@ import { MenuHeaderComponent, NoMenuHeaderComponent, TrackBudgetComponent, Curre
 import { SQLite } from '@ionic-native/sqlite';
 import { EmailComposer } from '@ionic-native/email-composer';
 
-import { AngularFireModule } from "angularfire2";
+// import { AngularFireModule } from "angularfire2";
+// import * as firebase from 'firebase';
 import { FIREBASE_CONFIG } from './firebase.credentials';
-import { AngularFireDatabaseModule } from "angularfire2/database";
-import { AngularFireOfflineModule } from 'angularfire2-offline';
+// import { AngularFireDatabaseModule } from "angularfire2/database";
+// import { AngularFireOfflineModule } from 'angularfire2-offline';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
+// firebase.initializeApp(FIREBASE_CONFIG)
+
 
 @NgModule({
   declarations: [
@@ -50,9 +58,12 @@ import { AngularFireOfflineModule } from 'angularfire2-offline';
     BrowserModule,
     HttpModule, // Newly add for ionic 3
     IonicModule.forRoot(MyApp),
+    // AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    // AngularFireDatabaseModule
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
-    AngularFireOfflineModule,
-    AngularFireDatabaseModule
+    AngularFirestoreModule,
+    //AngularFirestoreModule.enablePersistence(),
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -9,6 +9,5 @@ export class ExpenseModel {
   expenseCode: string;
   comment: string;
   inSync: boolean;
-  year_month?: string;
 
 }

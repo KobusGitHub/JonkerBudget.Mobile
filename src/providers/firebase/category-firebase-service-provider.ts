@@ -1,32 +1,29 @@
 import { Injectable } from "@angular/core";
-import { AngularFireDatabase } from "angularfire2/database";
 import { CategoryModel } from "../../models/category-model";
 import { CategorySqlServiceProviderInterface } from "../../shared/shared-interfaces";
-import { FirebaseDatabase } from "@firebase/database-types";
+
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CategoryFirebaseServiceProvider implements CategorySqlServiceProviderInterface {
-    private categoryRef = this.db.list<CategoryModel>('category')
+    //https://www.youtube.com/watch?v=-GjF9pSeFTs
+
     //users
     //Category
     //Expense,
 
-    constructor(private db: AngularFireDatabase) { }
-
-    // getCategories() {
-    //     return this.categoryRef;
-    // }
-
-    // addCategory(category: CategoryModel) {
-    //     return this.categoryRef.push(category);
-    // }
+    constructor(private db: AngularFirestore) { }
 
     public insertRecord(categoryModel: CategoryModel, callbackMethod) {
-        var ref = this.db.database.ref();
-        var dd = ref.child('category/' + categoryModel.guidId).set(categoryModel).then(ref => {
+        var dd = 6;
+        this.db.collection("category").doc(categoryModel.guidId).set(categoryModel).then(docRef => {
+            console.log(docRef);
             callbackMethod({ success: true, data: null });
-        });
-
+        }).catch(error => {
+            console.log(error);
+            callbackMethod({ success: false, data: null });
+        })
     }
 
     public getRecord(id, callbackMethod) {
@@ -34,46 +31,49 @@ export class CategoryFirebaseServiceProvider implements CategorySqlServiceProvid
     }
 
     public getRecordByGuidId(guidId, callbackMethod) {
-        var ref = this.db.database.ref();
-        var catRef = ref.child('category/' + guidId);
-        catRef.once('value').then(catSnap => {
-            callbackMethod({ success: true, data: catSnap.val() });
+        var docRef = this.db.doc('category/' + guidId);
+        var valueChangesSub = docRef.valueChanges();
+
+        var subscription = valueChangesSub.subscribe(res => {
+            callbackMethod({ success: true, data: res });
+            subscription.unsubscribe();
+        }, err => {
+            callbackMethod({ success: false, data: err });
+            subscription.unsubscribe();
         })
     }
 
     public getAll(callbackMethod) {
-        var ref = this.db.database.ref();
-        var catRef = ref.child('category').orderByValue();
-        catRef.on('value', snapshot => {
-            let data: any[] = [];
-    
-            snapshot.forEach((snap) => {
-                data.push(snap.val());
-                console.log(snap);
-                return false;
-            })
-            callbackMethod({ success: true, data:data });
+        var categoryCollectionRef = this.db.collection('category', ref => {
+            return ref.orderBy('isFavourite', 'desc').orderBy('categoryName');
+        });
+        var notes = categoryCollectionRef.valueChanges();
+        var subscription = notes.subscribe(res => {
+            callbackMethod({ success: true, data: res });
+        }, err => {
+           callbackMethod({ success: false, data: err });
         })
     }
 
     public updateRecord(categoryModel: CategoryModel, callbackMethod) {
-        this.categoryRef.update(categoryModel.guidId, categoryModel).then(ok => {
+        var docRef = this.db.doc('category/' + categoryModel.guidId);
+        docRef.set(categoryModel).then(ok => {
             callbackMethod({ success: true, data: ok });
-        }, error => {
-            callbackMethod({ success: true, data: error });
+        }).catch(err => {
+            callbackMethod({ success: false, data: err });
         });
-
     }
-    
+
     public deleteRecord(id, callbackMethod) {
         this.deleteRecordByGuidId(id, callbackMethod)
     }
 
     public deleteRecordByGuidId(guidId, callbackMethod) {
-        this.categoryRef.remove(guidId).then(ok => {
+        var docRef = this.db.doc('category/' + guidId);
+        docRef.delete().then(ok => {
             callbackMethod({ success: true, data: ok });
-        }, error => {
-            callbackMethod({ success: true, data: error });
+        }).catch(err => {
+            callbackMethod({ success: false, data: err });
         });
     }
 

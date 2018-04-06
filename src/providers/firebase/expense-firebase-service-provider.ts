@@ -1,91 +1,119 @@
 import { Injectable } from "@angular/core";
-import { AngularFireDatabase } from "angularfire2/database";
 import { ExpenseModel } from "../../shared/shared-models";
 import { ExpenseSqlServiceProviderInterface } from "../../shared/shared-interfaces";
-import { FirebaseDatabase } from "@firebase/database-types";
 
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import { resolve } from "url";
 
 @Injectable()
 export class ExpenseFirebaseServiceProvider implements ExpenseSqlServiceProviderInterface {
-    private expenseRef = this.db.list<ExpenseModel>('expense')
+    //https://www.youtube.com/watch?v=-GjF9pSeFTs
 
-    constructor(private db: AngularFireDatabase) { }
-    
+    //users
+    //Category
+    //Expense,
+
+    constructor(private db: AngularFirestore) { }
+
     public insertRecord(expenseModel: ExpenseModel, callbackMethod){
-        expenseModel.year_month = expenseModel.year + '_' + expenseModel.month;
-        var ref = this.db.database.ref();
-        var dd = ref.child('expense/' + expenseModel.guidId).set(expenseModel).then(ref => {
+        this.db.collection("expense").doc(expenseModel.guidId).set(expenseModel).then(docRef => {
+            console.log(docRef);
             callbackMethod({ success: true, data: null });
-        });
+        }).catch(error => {
+            console.log(error);
+            callbackMethod({ success: false, data: null });
+            
+        })
     }
     public getRecord(id, callbackMethod){
         this.getRecordByGuidId(id, callbackMethod);
     }
     public getRecordByGuidId(guidId, callbackMethod) {
-        var ref = this.db.database.ref();
-        var catRef = ref.child('expense/' + guidId);
-        catRef.once('value').then(catSnap => {
-            callbackMethod({ success: true, data: catSnap.val() });
+        var docRef = this.db.doc('expense/' + guidId);
+        var valueChangesSub = docRef.valueChanges();
+
+        var subscription = valueChangesSub.subscribe(res => {
+            callbackMethod({ success: true, data: res });
+            subscription.unsubscribe();
+        }, err => {
+            callbackMethod({ success: false, data: err });
+            subscription.unsubscribe();
         })
     }
     public getAll(callbackMethod){
-        var ref = this.db.database.ref();
-        var catRef = ref.child('expense').orderByValue();
-        catRef.on('value', snapshot => {
-            let data: any[] = [];
-    
-            snapshot.forEach((snap) => {
-                data.push(snap.val());
-                console.log(snap);
-                return false;
+        var collectionRef = this.db.collection('expense', ref => {
+            return ref.orderBy('recordDate');
+        });
+        //var notes = categoryCollectionRef.valueChanges();
+        var snapshot = collectionRef.snapshotChanges()
+            .map(changes => {
+                return changes.map(snap => {
+                    return snap.payload.doc.data() as ExpenseModel;
+                })
             })
-            callbackMethod({ success: true, data:data });
+        var subscription = snapshot.subscribe(res => {
+            callbackMethod({ success: true, data: res });
+        }, err => {
+           callbackMethod({ success: false, data: err });
         })
     }
     public updateRecord(expenseModel: ExpenseModel, callbackMethod){
-        this.expenseRef.update(expenseModel.guidId, expenseModel).then(ok => {
+        var docRef = this.db.doc('expense/' + expenseModel.guidId);
+        docRef.set(expenseModel).then(ok => {
             callbackMethod({ success: true, data: ok });
-        }, error => {
-            callbackMethod({ success: true, data: error });
+        }).catch(err => {
+            callbackMethod({ success: false, data: err });
         });
     }
     public deleteRecord(id: number, callbackMethod){
         this.deleteRecordByGuidId(id, callbackMethod)
     }
     public deleteRecordByGuidId(guidId, callbackMethod) {
-        this.expenseRef.remove(guidId).then(ok => {
+        var docRef = this.db.doc('expense/' + guidId);
+        docRef.delete().then(ok => {
             callbackMethod({ success: true, data: ok });
-        }, error => {
-            callbackMethod({ success: true, data: error });
+        }).catch(err => {
+            callbackMethod({ success: false, data: err });
         });
     }
 
     public getSumInPeriod(year: number, month: string, callbackMethod){
-        var ref = this.db.database.ref();
-        var catRef = ref.child('expense').orderByChild('year_month').equalTo(year + '_' + month);
-        catRef.on('value', snapshot => {
-            let expenseValue = 0;
-    
-            snapshot.forEach((snap) => {
-                expenseValue +=  Number(snap.val().expenseValue);
-                return false;
+
+        var collectionRef = this.db.collection('expense', ref => {
+            return ref.where('month', '==', month).where('year', '==', year).orderBy('recordDate');
+        });
+        //var notes = categoryCollectionRef.valueChanges();
+        var snapshot = collectionRef.snapshotChanges()
+            .map(changes => {
+                return changes.map(snap => {
+                    return snap.payload.doc.data() as ExpenseModel;
+                })
             })
-            callbackMethod({ success: true, data:expenseValue });
+        var subscription = snapshot.subscribe(res => {
+            let expenseValue = 0;
+            res.forEach(exp => {
+                expenseValue +=  Number(exp.expenseValue);
+            });
+
+            callbackMethod({ success: true, data: expenseValue });
+        }, err => {
+            callbackMethod({ success: false, data: err });
         })
+
     }
     public getAllInPeriod(year:number, month:string, callbackMethod){
-        var ref = this.db.database.ref();
-        var catRef = ref.child('expense').orderByChild('year_month').equalTo(year + '_' + month);
-        catRef.on('value', snapshot => {
-            let data: any[] = [];
-    
-            snapshot.forEach((snap) => {
-                data.push(snap.val());
-                console.log(snap);
-                return false;
-            })
-            callbackMethod({ success: true, data:data });
+        var collectionRef = this.db.collection('expense', ref => {
+            return ref.where('year', '==', year).where('month', '==', month).orderBy('recordDate');
+        });
+        var notes = collectionRef.valueChanges();
+      
+        var subscription = notes.subscribe(res => {
+            callbackMethod({ success: true, data: res });
+        }, err => {
+           callbackMethod({ success: false, data: err });
         })
+
     }
     
     // NOT IMPLEMENTED

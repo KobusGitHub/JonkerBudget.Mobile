@@ -176,14 +176,7 @@ export class SetupPage {
   testData: CategoryModel = undefined;
   testDataList: CategoryModel[] = undefined;
 
-  testClick() {
-    this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.getRecord(this.formData.guidId, e => this.getRecordFirebaseCallback(e))
-  }
-
-  testClick1() {
-    this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.getAll(e => this.getRecordListFirebaseCallback(e))
-  }
-
+  
   getRecordFirebaseCallback(result){
    
     this.testData = result.data;
@@ -193,41 +186,50 @@ export class SetupPage {
     this.testDataList = result.data;
   }
 
-  saveCategoryToSql() {
-    this.loader = this.loading.create({ content: 'Busy saving on device, please wait...' });
-    this.loader.present().then(() => {
-      //if (this.budgetSetupId === 0) {
-      if (this.categoryGuidId == '') {
-        //this.databaseSqlServiceProvider.categoryDbProvider.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e));
-        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e))
-
-      } else {
-        //this.databaseSqlServiceProvider.categoryDbProvider.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e));
-        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e))
-        
-
-      }
-    });
-  }
+  // saveCategoryToSql() {
+  //   this.loader = this.loading.create({ content: 'Busy saving on device, please wait...' });
+  //   this.loader.present().then(() => {
+  //     //if (this.budgetSetupId === 0) {
+  //     if (this.categoryGuidId == '') {
+  //       //this.databaseSqlServiceProvider.categoryDbProvider.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e));
+  //       this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e))
+  //     } else {
+  //       //this.databaseSqlServiceProvider.categoryDbProvider.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e));
+  //       this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e))
+  //     }
+  //   });
+  // } 
   
+  saveCategoryToSql() {
+   
+      if (this.categoryGuidId == '') {
+        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.insertRecord(this.modelToSave, e => this.insertBudgetSetupTableCallback(e))
+        this.navCtrl.pop();
+      } else {
+        this.databaseSqlServiceProvider.categoryFirebaseDbProdiver.updateRecord(this.modelToSave, e => this.updateBudgetSetupTableCallback(e))
+        this.navCtrl.pop();
+      }
+  }
 
   insertBudgetSetupTableCallback(result: SqliteCallbackModel) {
-    this.loader.dismiss();
+    if(this.loader){this.loader.dismiss();}
     if (result.success) {
       this.toast.showToast('Insert category successfully');
-      this.events.publish('DataUpdated', Date.now());
-      this.navCtrl.pop();
+      // this.events.publish('DataUpdated', Date.now());
+      // this.navCtrl.pop();
       return;
     }
-    this.toast.showToast('Error');
+    //this.toast.showToast('Error');
+    this.events.publish('DataUpdated', Date.now());
+  
   }
 
   updateBudgetSetupTableCallback(result: SqliteCallbackModel) {
-    this.loader.dismiss();
+    if(this.loader){this.loader.dismiss();}
     if (result.success) {
       this.toast.showToast('Updated category successfully');
-      this.events.publish('DataUpdated', Date.now());
-      this.navCtrl.pop();
+      // this.events.publish('DataUpdated', Date.now());
+      // this.navCtrl.pop();
       return;
     }
     this.toast.showToast('Error');

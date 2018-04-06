@@ -6,7 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Splash } from '../pages/splash/splash';
 import { Delay } from '../pages/delay/delay';
 
-import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage, NetReportPage } from '../shared/shared-pages';
+import { HomePage, SqlitePage, BudgetListPage, TempPage, SetMonthPage, ReportPage, SyncPage, NetReportPage, SetupPage } from '../shared/shared-pages';
 import {
   DatabaseSqlServiceProvider, UserSqlServiceProvider, MockUserSqlServiceProvider,
   CategorySqlServiceProvider, MockCategorySqlServiceProvider,
@@ -148,7 +148,8 @@ export class MyApp {
   dismissModalAndNavigateWhenDone() {
     if (this.splashScreenDone && this.initalSetupDone) {
       this.splashModal.dismiss();
-      this.rootPage = HomePage;
+      //this.rootPage = HomePage;
+      this.rootPage = BudgetListPage;
     }
   }
 
@@ -231,7 +232,8 @@ export class MyApp {
     if (result.success === false) {
       alert(result.data);
     }
-    this.nav.setRoot(HomePage);
+    //this.nav.setRoot(HomePage);
+    this.nav.setRoot(BudgetListPage);
   }
 
   buildDatabase() {
