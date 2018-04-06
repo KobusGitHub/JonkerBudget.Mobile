@@ -61,8 +61,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
     // AngularFireModule.initializeApp(FIREBASE_CONFIG),
     // AngularFireDatabaseModule
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
-    AngularFirestoreModule,
-    //AngularFirestoreModule.enablePersistence(),
+    //AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule
   ],
   bootstrap: [IonicApp],

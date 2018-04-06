@@ -45,6 +45,7 @@ loader: any;
   }
 
   getAllCategoriesCallback(sqliteCallbackModel: SqliteCallbackModel){
+    this.categories = [];
     this.loader.dismiss();
     if(sqliteCallbackModel.success){
       sqliteCallbackModel.data.forEach(cat => {
@@ -56,6 +57,7 @@ loader: any;
           textColor: 'lightgray'
         })
       });
+      this.generateClick();
       
     }
   }
@@ -76,6 +78,10 @@ loader: any;
 
   getAllInPeriodCallback(sqliteCallbackModel: SqliteCallbackModel){
     this.loader.dismiss();
+
+    this.categories.forEach(cat => {
+      cat.expenseValue = 0;
+    });
     if(sqliteCallbackModel.success){
 
       sqliteCallbackModel.data.forEach(rec => {
