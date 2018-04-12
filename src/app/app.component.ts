@@ -148,8 +148,8 @@ export class MyApp {
   dismissModalAndNavigateWhenDone() {
     if (this.splashScreenDone && this.initalSetupDone) {
       this.splashModal.dismiss();
-      //this.rootPage = HomePage;
-      this.rootPage = BudgetListPage;
+      this.rootPage = HomePage;
+      //this.rootPage = BudgetListPage;
     }
   }
 
@@ -202,14 +202,16 @@ export class MyApp {
 
   ngAfterViewInit() {
 
-    this.callbackManager = new CallbackMangerServiceProvider();
-    this.callbackManager.add('doesTableExistCallback');
-    this.loader = this.loading.create({
-      content: 'Checking Database, please wait...',
-    });
-    this.loader.present().then(() => {
-      this.databaseSqlServiceProvider.userDbProvider.doesTableExist(e => this.doesTableExistCallback(e));
-    });
+    this.nav.setRoot(HomePage);
+    
+    // this.callbackManager = new CallbackMangerServiceProvider();
+    // this.callbackManager.add('doesTableExistCallback');
+    // this.loader = this.loading.create({
+    //   content: 'Checking Database, please wait...',
+    // });
+    // this.loader.present().then(() => {
+    //   this.databaseSqlServiceProvider.userDbProvider.doesTableExist(e => this.doesTableExistCallback(e));
+    // });
   }
 
   doesTableExistCallback(result: SqliteCallbackModel) {
@@ -232,8 +234,8 @@ export class MyApp {
     if (result.success === false) {
       alert(result.data);
     }
-    //this.nav.setRoot(HomePage);
-    this.nav.setRoot(BudgetListPage);
+    this.nav.setRoot(HomePage);
+    //this.nav.setRoot(BudgetListPage);
   }
 
   buildDatabase() {
